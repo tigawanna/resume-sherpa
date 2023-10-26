@@ -37,7 +37,14 @@ export default createRequestHandler({
     let queries = Object.create(null);
     return {
       emitBeforeSsrChunk() {
-        return ``;
+        if (Object.keys(queries).length === 0) return "";
+
+        // Emit a script that calls the global $TQS function with the
+        // newly fetched query data.
+
+        const queriesString = uneval(queries);
+        queries = Object.create(null);
+        return `<script>$TQS(${queriesString})</script>`;
       },
 
       emitToDocumentHead() {
@@ -49,6 +56,7 @@ export default createRequestHandler({
         document.documentElement.setAttribute("data-theme", "${cookie_theme}");
       })();
      </script>
+     <script>$TQD=Object.create(null);$TQS=data=>Object.assign($TQD,data);</script>
 
      `;
       },
@@ -56,6 +64,7 @@ export default createRequestHandler({
       async extendPageContext(ctx) {
         const request = ctx.requestContext?.request;
         if (!request) return;
+        ctx.locals.test="HATTIP EXTEND PAGE CONTEXT";
 
         if (!ctx.locals.pb) {
           ctx.locals.pb = new PocketBase(

@@ -1,4 +1,5 @@
 import { Link } from "rakkasjs";
+import { SimpleLinks } from "./SimpleLinks";
 
 
 interface ToolbarProps {}
@@ -13,7 +14,7 @@ export function Toolbar({}: ToolbarProps) {
       <Link href="/" className="text-2xl font-bold">
         Home
       </Link>
-
+  <SimpleLinks/>
     </header>
   );
 }
