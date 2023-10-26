@@ -93,7 +93,7 @@ export function TheStringListInput<T>({
             field_key={field_key}
             field_name={field_name}
             label_classname="hidden"
-            value={item}
+            val={item}
             onChange={handleChange}
             placeholder="Add an item "
             description="you can add multiple items comma separated"

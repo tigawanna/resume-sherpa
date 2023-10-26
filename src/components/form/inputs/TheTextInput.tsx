@@ -14,7 +14,7 @@ interface TheTextInputProps<T>
   output_classname?: string;
   editing?: boolean;
   description?: string;
-  val: string | Date | URL | number | readonly string[] | undefined;
+  val?: string | Date | URL | number | readonly string[] | undefined;
 }
 
 export function TheTextInput<T>({
