@@ -54,7 +54,7 @@ export function TheStringListInput<T>({
 
     setInput((prev) => {
       // @ts-expect-error
-        const prev_list = prev[field_key].split(",") as string[]
+      const prev_list = prev[field_key].split(",") as string[]
       if (!Array.isArray(prev_list)) return prev;
       const itemSet = new Set(prev_list);
       one_item.split(",").forEach((entry) => itemSet.add(entry.trim()));
@@ -71,20 +71,26 @@ export function TheStringListInput<T>({
         <h1 className="font bold gap- border-b border-b-accent  font-bold">
           {field_name}
         </h1>
-        {items.map((item, idx) => (
-          <div
-            key={item + idx}
-            className="flex items-center justify-between gap-2 btn btn-xs btn-outline"
-          >
-            {item}
-            {editing && (
-              <X
-                className="h-4 w-4 hover:text-error"
-                onClick={() => removeItem(item)}
-              />
-            )}
-          </div>
-        ))}
+        {items.map((item, idx) => {
+        if(item !==""){
+         return (
+           <div
+             key={item + idx}
+             className="flex items-center justify-between gap-2 btn btn-xs btn-outline"
+           >
+             {item}
+             {editing && (
+               <X
+                 className="h-4 w-4 hover:text-error"
+                 onClick={() => removeItem(item)}
+               />
+             )}
+           </div>
+         );
+        }
+ }
+        )
+        }
       </div>
       {editing && (
         <div className="flex w-fit gap-1">

@@ -12,6 +12,8 @@ import { Spinner } from "@/components/navigation/loaders/Spinner";
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { TheTextAreaInput } from "@/components/form/inputs/TheTextArea";
+import { TheStringListInput } from "@/components/form/inputs/StringListInput";
 
 interface ProfileComponentProps {}
 
@@ -73,7 +75,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
   // console.log("response  ==  ",response)
   // console.log("input =============== ", input);
   return (
-    <div className="w-full h-full  flex flex-col items-center justify-center">
+    <div className="w-full h-full  flex flex-col items-center justify-center px-4">
       {response?.error && <PBReturnedUseQueryError error={response.error} />}
 
       <div className="flex items-center justify-end gap-2  p-1 w-full sticky top-10">
@@ -93,7 +95,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
       </div>
 
       {response?.data && (
-        <div className="w-full  flex flex-col  gap-2  px-5 justify-between">
+        <div className="w-full  flex flex-col  gap-2  p-2 justify-between mb-5">
           <div className="w-full  flex flex-col md:flex-row gap-2  px-5 justify-between">
             <div className="min-w-[250px]">
               <ProfileImage
@@ -107,12 +109,14 @@ export function ProfileComponenst({}: ProfileComponentProps) {
 
             <div className="min-w-[70%] h-full flex flex-col  md:flex-row  p-1  gap-2">
               <div className="w-full h-full flex flex-col  bg-base-300 p-1  gap-2">
+                {/* email, username , github_username , linkedin_username */}
                 <ProfileDetails
                   profile={response?.data}
                   editing={editing}
                   input={input}
                   setInput={setInput}
                 />
+                {/* country , city , phone */}
                 <TheCountryFields
                   editing={editing}
                   country={{
@@ -134,7 +138,45 @@ export function ProfileComponenst({}: ProfileComponentProps) {
               </div>
             </div>
           </div>
-          <div className="flex w-full justify-center"></div>
+{/* skills */}
+          <div className=" h-full flex flex-col  md:flex-row  p-1  gap-2">
+            <TheStringListInput
+              editing={editing}
+              field_name="Skills"
+              field_key="skills"
+              input={input}
+              setInput={setInput}
+            />
+          </div>
+          <div className=" h-full flex flex-col  md:flex-row  p-1  gap-2">
+            <TheStringListInput
+              editing={editing}
+              field_name="Languages Spoken"
+              field_key="langauges"
+              input={input}
+              setInput={setInput}
+            />
+          </div>
+          {/* about_me */}
+          <div className="min-w-[70%] h-full flex flex-col  md:flex-row  p-1  gap-2">
+            <TheTextAreaInput
+              className="min-h-[180px]"
+              field_key={"about_me"}
+              value={input["about_me"]}
+              // input={input}
+              field_name={"About Me"}
+              onChange={(e) => {
+                setInput((prev) => {
+                  return {
+                    ...prev,
+                    about_me: e.target.value,
+                  };
+                });
+              }}
+              label_classname=""
+              editing={editing}
+            />
+          </div>
         </div>
       )}
     </div>
