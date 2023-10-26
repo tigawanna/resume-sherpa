@@ -4,6 +4,7 @@ import { LayoutProps, PageContext, useLocation } from "rakkasjs";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
+import React from "react";
 
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
@@ -25,6 +26,9 @@ function Layout({ children }: LayoutProps) {
         pauseOnHover
         theme="dark"
       />
+      {import.meta.env.DEV && (
+        <ReactQueryDevtoolsProduction/>
+      )}
     </div>
   );
 }
@@ -36,5 +40,13 @@ Layout.preload = (ctx: PageContext) => {
     },
   };
 };
+
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/build/modern/production.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    }),
+  ),
+);
 
 export default Layout;

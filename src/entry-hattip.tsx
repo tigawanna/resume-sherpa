@@ -47,9 +47,9 @@ export default createRequestHandler({
         return `<script>$TQS(${queriesString})</script>`;
       },
 
-      emitToDocumentHead() {
-        const cookie_theme = requestContext?.cookie?.theme;
-        return `
+    emitToDocumentHead() {
+    const cookie_theme = requestContext?.cookie?.theme;
+    return `
     <link rel="icon" type="image/svg+xml" href="/site.svg" />
     <script>
       (function() {
@@ -57,8 +57,7 @@ export default createRequestHandler({
       })();
      </script>
      <script>$TQD=Object.create(null);$TQS=data=>Object.assign($TQD,data);</script>
-
-     `;
+  `;
       },
 
       async extendPageContext(ctx) {
@@ -75,27 +74,26 @@ export default createRequestHandler({
             request.headers.get("cookie") || ""
           );
         }
-        try {
-          if (ctx.locals.pb.authStore.isValid) {
-            const user = ctx?.locals?.pb;
-            ctx.queryClient.setQueryData("user", user?.authStore?.model);
-            console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
-          } else {
-            console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
-            ctx.locals.pb.authStore.clear();
-            ctx.queryClient.setQueryData("user", null);
-          }
-        } catch (_) {
-          // clear the auth store on failed refresh
-          ctx.locals.pb.authStore.clear();
-        }
+        // try {
+        //   if (ctx.locals.pb.authStore.isValid) {
+        //     const user = ctx?.locals?.pb;
+        //     ctx.queryClient.setQueryData("user", user?.authStore?.model);
+        //     console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
+        //   } else {
+        //     console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
+        //     ctx.locals.pb.authStore.clear();
+        //     ctx.queryClient.setQueryData("user", null);
+        //   }
+        // } catch (_) {
+        //   // clear the auth store on failed refresh
+        //   ctx.locals.pb.authStore.clear();
+        // }
       },
 
       wrapApp(app) {
         const queryCache = new QueryCache({
           onSuccess(data, query) {
-            // Store newly fetched data
-            queries[query.queryHash] = data;
+          queries[query.queryHash] = data;
           },
         });
 
@@ -111,8 +109,7 @@ export default createRequestHandler({
           },
         });
         return (
-         
-          <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>
+         <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>
         );
       },
 

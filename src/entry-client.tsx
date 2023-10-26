@@ -49,29 +49,13 @@ startClient({
     },
     extendPageContext(ctx) {
         ctx.locals.test = "CLIENT EXTEND PAGE CONTEXT";
-        console.log("CKLIENT POCKETBASE INSTANCE ",ctx.locals.pb);
-   
-        if (!ctx.locals.pb){
+       if (!ctx.locals.pb){
           ctx.locals.pb = new PocketBase(
             import.meta.env.RAKKAS_PB_URL,
           ) as TypedPocketBase<Schema>;
           const model = ctx.locals.pb.authStore.model
-          console.log(
-            "CKLIENT POCKETBASE INSTANCE AUTH STORE EMAIL========== ",
-            model?.email
-          );
-          // ctx.locals.pb.authStore.loadFromCookie(
-          //   ctx.request.headers.get("cookie") || ""
-          // );
       }
-             console.log(
-               "CKLIENT POCKETBASE INSTANCE INITED AFTER",
-               ctx.locals.pb,
-             );
-      // Add properties to the page context,
-      // especially to ctx.locals.
-      // Extensions added here will only be
-      // available on the client-side.
+
     },
   },
 });
