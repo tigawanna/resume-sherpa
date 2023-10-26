@@ -26,10 +26,8 @@ export async function emailPasswordLogin(identity: string, password: string) {
   const user  =await tryCatchWrapper(
     pb.collection("sherpa_user").authWithPassword(identity, password),
   );
-    if (user?.data) {
-        document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
-    }
-    return user
+  document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
+  return user
 }
 
 // export async function oauthLogin(options:OAuth2AuthConfig) {

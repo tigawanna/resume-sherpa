@@ -12,6 +12,7 @@ export function useUser(){
         },
         onSuccess:()=>{
             qc.invalidateQueries({ queryKey: ['user'] })
+            window?.location&&window?.location.reload();
         }
     })
     

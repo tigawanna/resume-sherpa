@@ -3,6 +3,7 @@ import { LookupHookResult, PageContext } from "rakkasjs";
 export function pageGuard(ctx: PageContext): LookupHookResult {
   const user = ctx.locals.pb?.authStore?.model;
   // console.log("user in dashboard page guard", user);
+  console.log("user in dashboard page guard", user);
   if (user) {
     return true;
   } else {

@@ -21,10 +21,8 @@ export function ProfileComponenst({}: ProfileComponentProps) {
   const qc = useQueryClient();
   const { query: user_query } = useUser();
   const id = user_query?.data?.id;
+  const [editing, setEditing] = useState(false);
 
-  // const query = useSSQ((ctx) => {
-  //   return tryCatchWrapper(ctx.locals.pb?.collection("sherpa_user").getOne(id));
-  // });
   const query = useQuery({
     queryKey: ["sherpa_user", id],
     queryFn: () =>
@@ -45,8 +43,6 @@ export function ProfileComponenst({}: ProfileComponentProps) {
     phone: profile?.phone ?? "",
     skills: profile?.skills ?? "",
   });
-  const [editing, setEditing] = useState(true);
-
   const mutation = useMutation({
     mutationFn: async (vars: SherpaUserUpdate) => {
       return tryCatchWrapper(
@@ -138,7 +134,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
               </div>
             </div>
           </div>
-{/* skills */}
+          {/* skills */}
           <div className=" h-full flex flex-col  md:flex-row  p-1  gap-2">
             <TheStringListInput
               editing={editing}

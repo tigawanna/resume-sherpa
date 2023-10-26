@@ -74,20 +74,20 @@ export default createRequestHandler({
             request.headers.get("cookie") || ""
           );
         }
-        // try {
-        //   if (ctx.locals.pb.authStore.isValid) {
-        //     const user = ctx?.locals?.pb;
-        //     ctx.queryClient.setQueryData("user", user?.authStore?.model);
-        //     console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
-        //   } else {
-        //     console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
-        //     ctx.locals.pb.authStore.clear();
-        //     ctx.queryClient.setQueryData("user", null);
-        //   }
-        // } catch (_) {
-        //   // clear the auth store on failed refresh
-        //   ctx.locals.pb.authStore.clear();
-        // }
+        try {
+          if (ctx.locals.pb.authStore.isValid) {
+            const user = ctx?.locals?.pb;
+            ctx.queryClient.setQueryData("user", user?.authStore?.model);
+            console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
+          } else {
+            console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
+            ctx.locals.pb.authStore.clear();
+            ctx.queryClient.setQueryData("user", null);
+          }
+        } catch (_) {
+          // clear the auth store on failed refresh
+          ctx.locals.pb.authStore.clear();
+        }
       },
 
       wrapApp(app) {
@@ -108,6 +108,10 @@ export default createRequestHandler({
             },
           },
         });
+
+
+ 
+
         return (
          <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>
         );
