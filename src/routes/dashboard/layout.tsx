@@ -13,9 +13,7 @@ export default function DashboardLayout({ children,url }: LayoutProps) {
       <div className="fixed top-10 left-1 z-50  md:hidden bg-base-300">
         <DashboardSidebar />
       </div>
-    <Suspense fallback={
-    <div className="min-h-screen w-full flex items-center justify-center">
-      <Spinner size="100px"/>
+    <Suspense fallback={<div className="min-h-screen w-full flex items-center justify-center"><Spinner size="100px"/>
       </div>
     }>
       {children}

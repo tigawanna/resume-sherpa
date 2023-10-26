@@ -1,5 +1,5 @@
 import { PageProps, usePageContext } from "rakkasjs";
-import { ProfileComponenst } from "./components/profile/profile-sections/ProfileComponent";
+import { ProfileComponenst } from "./components/profile/ProfileComponent";
 import { Suspense } from "react";
 import { Spinner } from "@/components/navigation/loaders/Spinner";
 

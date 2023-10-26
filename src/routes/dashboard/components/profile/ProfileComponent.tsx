@@ -1,10 +1,10 @@
 import { SherpaUserResponse, SherpaUserUpdate } from "@/lib/pb/db-types";
 import { useMutation, usePageContext,useSSQ } from "rakkasjs";
-import { ProfileImage } from "./ProfileImage";
+import { ProfileImage } from "./profile-sections/ProfileImage";
 import { tryCatchWrapper } from "@/utils/async";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
 import { useState } from "react";
-import { ProfileDetails } from "./ProfileDetails";
+import { ProfileDetails } from "./profile-sections/ProfileDetails";
 import { Edit, Save } from "lucide-react";
 import { TheCountryFields } from "@/components/form/TheCountryFields";
 import { toast } from "react-toastify";
