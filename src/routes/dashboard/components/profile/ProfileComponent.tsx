@@ -1,5 +1,4 @@
-import { SherpaUserResponse, SherpaUserUpdate } from "@/lib/pb/db-types";
-import { useMutation, usePageContext,useSSQ } from "rakkasjs";
+import { SherpaUserUpdate } from "@/lib/pb/db-types";
 import { ProfileImage } from "./profile-sections/ProfileImage";
 import { tryCatchWrapper } from "@/utils/async";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
@@ -10,16 +9,24 @@ import { TheCountryFields } from "@/components/form/TheCountryFields";
 import { toast } from "react-toastify";
 import { pb } from "@/lib/pb/client";
 import { Spinner } from "@/components/navigation/loaders/Spinner";
+import { useUser } from "@/utils/hooks/tanstack-query/useUser";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProfileComponentProps {}
 
 export function ProfileComponenst({}: ProfileComponentProps) {
-  const page_ctx = usePageContext();
-  const qc = page_ctx.queryClient;
-  const { id } = qc.getQueryData("user") as SherpaUserResponse;
-  
-  const query = useSSQ((ctx) => {
-    return tryCatchWrapper(ctx.locals.pb?.collection("sherpa_user").getOne(id));
+  const qc = useQueryClient();
+  const { query: user_query } = useUser();
+  const id = user_query?.data?.id;
+
+  // const query = useSSQ((ctx) => {
+  //   return tryCatchWrapper(ctx.locals.pb?.collection("sherpa_user").getOne(id));
+  // });
+  const query = useQuery({
+    queryKey: ["sherpa_user", id],
+    queryFn: () =>
+      tryCatchWrapper(pb.collection("sherpa_user").getOne(id ?? "")),
   });
   const profile = query.data?.data;
 
@@ -38,37 +45,37 @@ export function ProfileComponenst({}: ProfileComponentProps) {
   });
   const [editing, setEditing] = useState(true);
 
-  const mutation = useMutation(
-    async (vars: SherpaUserUpdate) => {
-      return tryCatchWrapper(pb.collection("sherpa_user").update(id, vars));
+  const mutation = useMutation({
+    mutationFn: async (vars: SherpaUserUpdate) => {
+      return tryCatchWrapper(
+        pb.collection("sherpa_user").update(id ?? "", vars),
+      );
     },
-    {
-      onSuccess: (res) => {
-        if (res.data) {
-          toast("Image updated successfully", { type: "success" });
-          query.refetch();
-          setEditing(false);
-          // startTransition(() => {
-          // })
-        }
-        if (res.error) {
-          toast(res.error.message, { type: "error", autoClose: false });
-        }
-      },
-      onError: (err: any) => {
-        toast(err?.message, { type: "error", autoClose: false });
-      },
+
+    onSuccess: (res) => {
+      if (res.data) {
+        toast("profile updated successfully", { type: "success" });
+        qc.invalidateQueries({ queryKey: ["sherpa_user", id] });
+        setEditing(false);
+        // startTransition(() => {
+        // })
+      }
+      if (res.error) {
+        toast(res.error.message, { type: "error", autoClose: false });
+      }
     },
-  );
+    onError: (err: any) => {
+      toast(err?.message, { type: "error", autoClose: false });
+    },
+  });
 
   const response = query.data;
-  console.log("response  ==  ",response)
+  // console.log("response  ==  ",response)
   // console.log("input =============== ", input);
   return (
     <div className="w-full h-full  flex flex-col items-center justify-center">
       {response?.error && <PBReturnedUseQueryError error={response.error} />}
-      {query.isRefetching && <Spinner />}
-     
+
       <div className="flex items-center justify-end gap-2  p-1 w-full sticky top-10">
         <button
           title={editing ? "stop editing" : "toggle editing"}
@@ -77,7 +84,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
           <Edit onClick={() => setEditing((prev) => !prev)} />
         </button>
         <button title="save changes" className="btn btn-sm ">
-          {mutation.isLoading ? (
+          {mutation.isPending ? (
             <Spinner size="40px" />
           ) : (
             <Save onClick={() => mutation.mutate(input)} className="h-7 w-7" />
@@ -129,7 +136,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
           </div>
           <div className="flex w-full justify-center"></div>
         </div>
-       )}
+      )}
     </div>
   );
 }
