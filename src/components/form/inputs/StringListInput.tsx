@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { TheTextInput } from "./TheTextInput";
+import { twMerge } from "tailwind-merge";
 
 interface TheListInputProps<T>
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -8,6 +9,8 @@ interface TheListInputProps<T>
   field_key: keyof T;
   input: T;
   editing: boolean;
+  container_classname?: string;
+  label_classname?: string;
   setInput: React.Dispatch<React.SetStateAction<T>>;
 }
 
@@ -66,31 +69,34 @@ export function TheStringListInput<T>({
   // @ts-expect-error
   const items = input[field_key].split(",") as string[]
   return (
-    <div className="flex h-full  flex-col gap-3 ">
+    <div
+      className={twMerge(
+        "flex w-full flex-col justify-center gap-2",
+        props.container_classname,
+      )}
+    >
       <div className="flex  w-full flex-wrap ietms-center gap-2 ">
-        <h1 className="font bold gap- border-b border-b-accent  font-bold">
+        <h1 className={twMerge("font-serif text-sm", props.label_classname)}>
           {field_name}
         </h1>
         {items.map((item, idx) => {
-        if(item !==""){
-         return (
-           <div
-             key={item + idx}
-             className="flex items-center justify-between gap-2 btn btn-xs btn-outline"
-           >
-             {item}
-             {editing && (
-               <X
-                 className="h-4 w-4 hover:text-error"
-                 onClick={() => removeItem(item)}
-               />
-             )}
-           </div>
-         );
-        }
- }
-        )
-        }
+          if (item !== "") {
+            return (
+              <div
+                key={item + idx}
+                className="flex items-center justify-between gap-2 btn btn-xs btn-outline"
+              >
+                {item}
+                {editing && (
+                  <X
+                    className="h-4 w-4 hover:text-error"
+                    onClick={() => removeItem(item)}
+                  />
+                )}
+              </div>
+            );
+          }
+        })}
       </div>
       {editing && (
         <div className="flex w-fit gap-1">

@@ -8,7 +8,7 @@ import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 export default function DashboardLayout({ children,url }: LayoutProps) {
   // const user =useUser();
   return (
-    <div className="w-full h-full min-h-screen  flex">
+    <div className="w-full h-full min-h-screen flex">
       <div className="h-full sticky top-10  hidden md:flex bg-base-300">
         <DashBoardLinks />
       </div>
@@ -22,9 +22,10 @@ export default function DashboardLayout({ children,url }: LayoutProps) {
           </div>
         }
       >
-        {children}
+        <div className="min-h-screen w-full flex items-center justify-center ">
+          {children}
+        </div>
       </ClientSuspense>
-
     </div>
   );
 }

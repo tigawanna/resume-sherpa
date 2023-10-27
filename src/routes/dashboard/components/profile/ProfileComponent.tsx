@@ -4,11 +4,10 @@ import { tryCatchWrapper } from "@/utils/async";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
 import { useState } from "react";
 import { ProfileDetails } from "./profile-sections/ProfileDetails";
-import { Edit, Save } from "lucide-react";
+import { Edit, Loader, Save } from "lucide-react";
 import { TheCountryFields } from "@/components/form/TheCountryFields";
 import { toast } from "react-toastify";
 import { pb } from "@/lib/pb/client";
-import { Spinner } from "@/components/navigation/loaders/Spinner";
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -68,32 +67,35 @@ export function ProfileComponenst({}: ProfileComponentProps) {
   });
 
   const response = query.data;
-  // console.log("response  ==  ",response)
-  // console.log("input =============== ", input);
   return (
-    <div className="w-full h-full  flex flex-col items-center justify-center px-4">
+    <div className="w-full h-full flex flex-col items-center  px-4 ">
       {response?.error && <PBReturnedUseQueryError error={response.error} />}
 
-      <div className="flex items-center justify-end gap-2  p-1 w-full sticky top-10">
+      <div className="flex items-center justify-end gap-1  p-1 w-full sticky top-10">
+        {editing && (
+          <button title="save changes" className="btn btn-sm ">
+            {mutation.isPending ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <Save
+                onClick={() => mutation.mutate(input)}
+                className="h-7 w-7"
+              />
+            )}
+          </button>
+        )}
         <button
           title={editing ? "stop editing" : "toggle editing"}
           className={editing ? "btn btn-sm text-accent" : "btn btn-sm"}
         >
           <Edit onClick={() => setEditing((prev) => !prev)} />
         </button>
-        <button title="save changes" className="btn btn-sm ">
-          {mutation.isPending ? (
-            <Spinner size="40px" />
-          ) : (
-            <Save onClick={() => mutation.mutate(input)} className="h-7 w-7" />
-          )}
-        </button>
       </div>
 
       {response?.data && (
-        <div className="w-full  flex flex-col  gap-2  p-2 justify-between mb-5">
-          <div className="w-full  flex flex-col md:flex-row gap-2  px-5 justify-between">
-            <div className="min-w-[250px]">
+        <div className="w-full  flex flex-col  gap-10  p-1  mb-5 sm:px-5 ">
+          <div className="w-full flex flex-col md:flex-row gap-5  justify-between ">
+            <div className="min-w-[250px] w-full">
               <ProfileImage
                 file_name={response?.data?.avatar}
                 record_id={response?.data?.id}
@@ -103,48 +105,44 @@ export function ProfileComponenst({}: ProfileComponentProps) {
               />
             </div>
 
-            <div className="min-w-[70%] h-full flex flex-col  md:flex-row  p-1  gap-2">
-              <div className="w-full h-full flex flex-col  bg-base-300 p-1  gap-2">
-                {/* email, username , github_username , linkedin_username */}
-                <ProfileDetails
-                  profile={response?.data}
-                  editing={editing}
-                  input={input}
-                  setInput={setInput}
-                />
-                {/* country , city , phone */}
-                <TheCountryFields
-                  editing={editing}
-                  country={{
-                    city: input.city ?? "",
-                    country: input.country ?? "",
-                    phone: input.phone ?? "",
-                  }}
-                  setInput={(value) =>
-                    setInput((prev) => {
-                      return {
-                        ...prev,
-                        country: value.country,
-                        phone: value.phone,
-                        city: value.city,
-                      };
-                    })
-                  }
-                />
-              </div>
+            <div className="w-full  flex flex-col   p-1  gap-2 ">
+              {/* email, username , github_username , linkedin_username */}
+              <ProfileDetails
+                profile={response?.data}
+                editing={editing}
+                input={input}
+                setInput={setInput}
+              />
+              {/* country , city , phone */}
+              <TheCountryFields
+                editing={editing}
+                country={{
+                  city: input.city ?? "",
+                  country: input.country ?? "",
+                  phone: input.phone ?? "",
+                }}
+                setInput={(value) =>
+                  setInput((prev) => {
+                    return {
+                      ...prev,
+                      country: value.country,
+                      phone: value.phone,
+                      city: value.city,
+                    };
+                  })
+                }
+              />
             </div>
           </div>
           {/* skills */}
-          <div className=" h-full flex flex-col  md:flex-row  p-1  gap-2">
+          <div className="w-full flex flex-wrap gap-5  ">
             <TheStringListInput
               editing={editing}
               field_name="Skills"
               field_key="skills"
               input={input}
               setInput={setInput}
-            />
-          </div>
-          <div className=" h-full flex flex-col  md:flex-row  p-1  gap-2">
+            />{" "}
             <TheStringListInput
               editing={editing}
               field_name="Languages Spoken"
@@ -153,10 +151,12 @@ export function ProfileComponenst({}: ProfileComponentProps) {
               setInput={setInput}
             />
           </div>
+
           {/* about_me */}
-          <div className="min-w-[70%] h-full flex flex-col  md:flex-row  p-1  gap-2">
+          <div className="w-full h-full flex flex-col  md:flex-row  p-1  gap-2">
             <TheTextAreaInput
-              className="min-h-[180px]"
+              container_classname="lg:max-w-[70%] lg:max-w-[60%] gap-2"
+              className="min-h-[180px] "
               field_key={"about_me"}
               value={input["about_me"]}
               // input={input}
@@ -173,6 +173,22 @@ export function ProfileComponenst({}: ProfileComponentProps) {
               editing={editing}
             />
           </div>
+
+          {editing && (
+            <button
+              title="save changes"
+              className="btn btn-sm h-auto p-1 px-3 btn-outline w-fit"
+            >
+              {mutation.isPending ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>
+                  Save Changes
+                  <Save onClick={() => mutation.mutate(input)} className="" />
+                </>
+              )}
+            </button>
+          )}
         </div>
       )}
     </div>

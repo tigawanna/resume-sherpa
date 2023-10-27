@@ -87,41 +87,41 @@ export function TheCountryFields({
   }
 
   return (
-    <div className="min-h-sm flex cursor-pointer flex-wrap items-center  gap-2 ">
-      {editing && (
-        <div className="flex items-center justify-center">
-          <div className="flex flex-col gap-[1px]">
-            <TheTextInput
-              field_key={"word"}
-              field_name={"country"}
-              autoComplete="off"
-              val={keyword.word}
-              onChange={handleChange}
-              container_classname="flex-row items-center"
-              label_classname="hidden"
-              placeholder={"search for country"}
-            />
-            {country.country === "" && (
-              <h2 className="text-sm text-warning">
-                click on a country to select
-              </h2>
-            )}
+    <div className="min-h-sm flex cursor-pointer flex-col lg:flex-rowitems-center  gap-2 ">
+      <div className="min-h-sm flex cursor-pointer flex-wrap items-center  gap-2 ">
+        {editing && (
+          <div className="flex items-center justify-center">
+            <div className="flex flex-col gap-[1px]">
+              <TheTextInput
+                field_key={"word"}
+                field_name={"country"}
+                autoComplete="off"
+                val={keyword.word}
+                onChange={handleChange}
+                container_classname="flex-row items-center"
+                label_classname="hidden"
+                placeholder={"search for country"}
+              />
+              {country.country === "" && (
+                <h2 className="text-sm text-warning">
+                  click on a country to select
+                </h2>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-      {editing && data && data?.length < 1 ? (
-        <div
-          className="flex h-full w-[70%] cursor-pointer break-inside-auto flex-col items-center
+        )}
+        {editing && data && data?.length < 1 ? (
+          <div
+            className="flex h-full w-[70%] cursor-pointer break-inside-auto flex-col items-center
           justify-center text-sm text-error
         "
-        >
-          0 results found{" "}
-        </div>
-      ) : null}
-      {/* {!editing&&<div className="flex ">{country.country}</div>} */}
+          >
+            0 results found{" "}
+          </div>
+        ) : null}
+        {/* {!editing&&<div className="flex ">{country.country}</div>} */}
 
-      
- <div className="h-full flex flex-wrap items-center justify-center rounded-lg duration-500 animate-in fade-in">
+        <div className="h-full flex flex-wrap items-center justify-center rounded-lg duration-500 animate-in fade-in">
           {data?.slice(0, 10).map((item, idx: number) => {
             return (
               <div
@@ -136,7 +136,7 @@ export function TheCountryFields({
             );
           })}
         </div>
-      
+      </div>
 
       <TheCountryCityPhoneFields
         country={country}

@@ -1,6 +1,7 @@
 import { PageProps } from "rakkasjs";
 import { ProfileComponenst } from "./components/profile/ProfileComponent";
 
+
 export default function DashboadPage({}: PageProps) {
 
   // console.log("user in dashboard page", user);

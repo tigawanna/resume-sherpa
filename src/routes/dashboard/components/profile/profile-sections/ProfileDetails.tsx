@@ -24,8 +24,8 @@ export function ProfileDetails({
     });
   }
   return (
-    <div className="w-full h-full flex flex-wrap items-center  px-3 p-1 gap-2">
-      <div className="h-full flex flex-wrap items-center justify-center gap-1">
+    <div className="w-full flex lg:flex-row flex-col  items-center sm:px-3 p-1 gap-2">
+      <div className="h-full w-full lg:w-fit flex flex-wrap items-center justify-center gap-1 ">
         <TheTextInput
           field_key={"email"}
           val={profile.email}
@@ -50,7 +50,7 @@ export function ProfileDetails({
           editing={editing}
         />
       </div>
-      <div className="h-full flex flex-wrap items-center justify-center gap-1">
+      <div className="h-full w-full lg:w-fit flex flex-wrap items-center justify-center gap-1 ">
         <TheTextInput
           field_key={"github_username"}
           val={input["github_username"]}
