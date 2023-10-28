@@ -31,9 +31,7 @@ interface ContentFormProps {
 }
 
 export function ContentForm({ default_value, updating }: ContentFormProps) {
- 
   const { user_query: user, page_ctx } = useUser();
-
   const create_mutation = useMutation({
     mutationFn: async (vars: SherpaContentCreate) => {
       return tryCatchWrapper(

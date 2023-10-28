@@ -1,8 +1,7 @@
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { Plus } from "lucide-react";
-import { Link, useLocation } from "rakkasjs";
+import { Link, usePageContext } from "rakkasjs";
 import { ContentCard } from "./ContentCard";
-import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { tryCatchWrapper } from "@/utils/async";
@@ -11,38 +10,10 @@ import { useSearchWithQuery } from "@/utils/hooks/search";
 interface ContentsProps {}
 
 export function Contents({}: ContentsProps) {
-  const { user_mutation, page_ctx, user_query } = useUser();
+const page_ctx = usePageContext();
 
-  // const [keyword, setKeyword] = useState("");
-  // const { debouncedValue, isDebouncing } = useDebouncedValue(keyword, 2000);
-  const { debouncedValue, isDebouncing, keyword, setKeyword } =
-    useSearchWithQuery();
-
-  // const query = useInfiniteQuery<
-  //   ListResult<SherpaContentResponse>,
-  //   Error,
-  //   InfiniteData<ListResult<SherpaContentResponse>, number>,
-  //   string[],
-  //   number
-  // >({
-  //   queryKey: ["sherpa_content", debouncedValue],
-  //   initialPageParam: 1,
-  //   queryFn: async ({ pageParam }) => {
-  //     return await page_ctx.locals.pb
-  //       ?.collection("sherpa_content")
-  //       .getList(pageParam, 50, {
-  //         sort: "-created",
-  //         filter: `title~"${debouncedValue}"`,
-  //       });
-  //   },
-
-  //   getNextPageParam: (lastPage, allPages) => {
-  //     console.log({ lastPage, allPages });
-  //     return lastPage.page + 1;
-  //   },
-  // });
-
-  const query = useInfiniteQuery({
+  const { debouncedValue, isDebouncing, keyword, setKeyword } = useSearchWithQuery();
+   const query = useInfiniteQuery({
     queryKey: ["sherpa_content", debouncedValue],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {

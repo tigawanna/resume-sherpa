@@ -58,7 +58,7 @@ export type SherpaUserCreate = {
     last_letter_on?: string | Date;
     langauges?: string;
     avatar?: File;
-    avatar_url?: string | URL;
+    avatar_url?: string;
 };
 
 export type SherpaUserUpdate = {
@@ -74,7 +74,7 @@ export type SherpaUserUpdate = {
     last_letter_on?: string | Date;
     langauges?: string;
     avatar?: File;
-    avatar_url?: string | URL;
+    avatar_url?: string;
 };
 
 export type SherpaUserCollection = {
@@ -112,8 +112,8 @@ export type SherpaProjectsResponse = {
 export type SherpaProjectsCreate = {
     name: string;
     description: string;
-    repo_url: string | URL;
-    image_url?: string | URL;
+    repo_url: string;
+    image_url?: string;
     languages?: string;
     libraries?: string;
     image?: string;
@@ -123,8 +123,8 @@ export type SherpaProjectsCreate = {
 export type SherpaProjectsUpdate = {
     name?: string;
     description?: string;
-    repo_url?: string | URL;
-    image_url?: string | URL;
+    repo_url?: string;
+    image_url?: string;
     languages?: string;
     libraries?: string;
     image?: string;
@@ -243,7 +243,7 @@ export type SherpaContentCreate = {
     title: string;
     type?: 'Video' | 'Blog' | 'Gist' | 'Podcast';
     description: string;
-    content_url: string | URL;
+    content_url: string;
     user: string;
 };
 
@@ -251,7 +251,7 @@ export type SherpaContentUpdate = {
     title?: string;
     type?: 'Video' | 'Blog' | 'Gist' | 'Podcast';
     description?: string;
-    content_url?: string | URL;
+    content_url?: string;
     user?: string;
 };
 
@@ -286,7 +286,7 @@ export type SherpaHackathonCreate = {
     technologies: string;
     from: string | Date;
     to: string | Date;
-    link: string | URL;
+    link: string;
     user: string;
 };
 
@@ -296,7 +296,7 @@ export type SherpaHackathonUpdate = {
     technologies?: string;
     from?: string | Date;
     to?: string | Date;
-    link?: string | URL;
+    link?: string;
     user?: string;
 };
 
@@ -369,7 +369,7 @@ export type SherpaJobApplicationResponse = {
 export type SherpaJobApplicationCreate = {
     title: string;
     description: string;
-    posting_url: string | URL;
+    posting_url: string;
     cover_letter?: string;
     resume?: string;
     user: string;
@@ -378,7 +378,7 @@ export type SherpaJobApplicationCreate = {
 export type SherpaJobApplicationUpdate = {
     title?: string;
     description?: string;
-    posting_url?: string | URL;
+    posting_url?: string;
     cover_letter?: string;
     resume?: string;
     user?: string;
