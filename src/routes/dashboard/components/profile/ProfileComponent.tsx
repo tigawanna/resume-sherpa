@@ -18,7 +18,7 @@ interface ProfileComponentProps {}
 
 export function ProfileComponenst({}: ProfileComponentProps) {
   const qc = useQueryClient();
-  const { query: user_query } = useUser();
+  const { user_query: user_query } = useUser();
   const id = user_query?.data?.id;
   const [editing, setEditing] = useState(false);
 

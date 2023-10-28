@@ -1,7 +1,7 @@
 import { ClientResponseError } from "pocketbase";
 
 interface ReturnedUseQueryErorProps {
-  error: ClientResponseError;
+  error: ClientResponseError|Error|null;
 }
 
 export function PBReturnedUseQueryError({ error}: ReturnedUseQueryErorProps) {

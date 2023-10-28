@@ -4,8 +4,8 @@ import { usePageContext } from "rakkasjs";
 
 export function useUser(){
     const qc = useQueryClient()
-    const { locals } = usePageContext()
-
+    const page_ctx = usePageContext()
+    const locals  = page_ctx.locals
     const mutation = useMutation({
         mutationFn: async() => {
             return locals.pb?.authStore.clear();
@@ -23,5 +23,5 @@ export function useUser(){
         },
     });
 
-    return {query,mutation}
+    return { user_query:query, user_mutation:mutation,page_ctx,logout:mutation.mutate} 
 }

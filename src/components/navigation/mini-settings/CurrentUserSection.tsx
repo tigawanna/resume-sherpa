@@ -4,8 +4,7 @@ import { Button } from "../../shadcn/ui/button";
 import { Loader, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "../../shadcn/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { SherpaUserResponse } from "@/lib/pb/db-types";
+
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 
 
@@ -16,13 +15,13 @@ interface CurrentUserSectionProps {
 }
 
 export function CurrentUserSection({setOpen}:CurrentUserSectionProps){
- const { query,mutation } = useUser();
- const user = query?.data;
+ const { user_query,user_mutation } = useUser();
+ const user = user_query?.data;
 
 
   async function logoutUser() {
     await artificialDelay(2000);
-    mutation.mutate()
+    user_mutation.mutate()
 }
 
 
@@ -65,10 +64,10 @@ return (
         variant={"ghost"}
         className="w-[80%] btn btn-sm btn-outline btn-error text-xs"
         size={"sm"}
-        disabled={mutation.isPending}
+        disabled={user_mutation.isPending}
       >
         Log out
-        {mutation.isPending ? (
+        {user_mutation.isPending ? (
           <Loader className="w-4 h-4  animate-spin" />
         ) : (
           <LogOut className="w-4 h-4 ml-2" />

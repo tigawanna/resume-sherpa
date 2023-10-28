@@ -41,7 +41,7 @@ export function TheTextAreaInput<T>({
       <Label
         htmlFor={field_key as string}
         className={twMerge(
-          "px-2 font-serif text-sm ",
+          "font-serif text-sm ",
           props.label_classname
         )}
       >
