@@ -36,7 +36,7 @@ export function Contents({}: ContentsProps) {
   //     }
   //   },
   // });
-  const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "") ?? 1;
+  const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "1") ?? 1;
 
   const query = useQuery({
     queryKey: ["sherpa_content", debouncedValue, page_number],
@@ -127,6 +127,7 @@ export function Contents({}: ContentsProps) {
         {pages_arr.map((item) => {
           return (
             <button
+              key={item}
               onClick={() => goToPage(item)}
               className={
                 item === page_number

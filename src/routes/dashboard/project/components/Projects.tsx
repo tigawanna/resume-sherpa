@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
-import { Link, usePageContext, useSSQ } from "rakkasjs";
+import { Link, navigate, usePageContext, useSSQ } from "rakkasjs";
 import { Spinner } from "@/components/navigation/loaders/Spinner";
 import { Suspense, useState } from "react";
 import { useDebouncedValue } from "@/utils/hooks/debounce";
@@ -8,8 +8,9 @@ import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { ReturnedUseQueryEror } from "@/components/error/ReturnedUseQueryEror";
 import { tryCatchWrapper } from "@/utils/async";
 import { useSearchWithQuery } from "@/utils/hooks/search";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
+import { numberToArray } from "@/utils/helpers/others";
 
 
 interface ProjectsProps {}
@@ -17,39 +18,40 @@ interface ProjectsProps {}
 export function Projects({}: ProjectsProps) {
 const page_ctx= usePageContext()
 const { debouncedValue, isDebouncing, keyword, setKeyword } = useSearchWithQuery();
-const query = useInfiniteQuery({
-  queryKey: ["sherpa_projects", debouncedValue],
-  initialPageParam: 1,
-  queryFn: async ({ pageParam }) => {
-    // console.log("page arams  ====== ",pageParam)
-    return tryCatchWrapper(
-      page_ctx.locals.pb?.collection("sherpa_projects").getList(pageParam, 2, {
-        sort: "-created",
-        filter: `name~"${debouncedValue}"`,
-      }),
-    );
-  },
+  const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "1") ?? 1;
 
-  getNextPageParam: (lastPage, allPages) => {
-    if (lastPage?.data) {
-      if (lastPage?.data?.totalPages > lastPage?.data?.page) {
-        return lastPage?.data?.page + 1;
-      }
-    }
-  },
-});
-  
+  const query = useQuery({
+    queryKey: ["sherpa_projects", debouncedValue, page_number],
+
+    queryFn: async () => {
+      // console.log("page arams  ====== ",pageParam)
+      return tryCatchWrapper(
+        page_ctx.locals.pb
+          ?.collection("sherpa_projects")
+          .getList(page_number, 12, {
+            sort: "-created",
+            filter: `name~"${debouncedValue}"`,
+          }),
+      );
+    },
+  });
+
+  if (query.error) {
+    return <PBReturnedUseQueryError error={query?.error} />;
+  }
+
   function handleChange(e: any) {
     setKeyword(e.target.value);
   }
-  const projects = query.data;
 
-    const error = query?.data?.pages
-      ?.flatMap((page) => page?.error)
-      ?.filter((item) => item && item !== null);
-    const data = query?.data?.pages
-      ?.flatMap((page) => page?.data?.items)
-      ?.filter((item) => item);
+  const error = query?.data?.error;
+  const data = query?.data?.data?.items;
+  const total_pages = query?.data?.data?.totalPages;
+  const pages_arr = numberToArray(total_pages!);
+  function goToPage(page: number) {
+    page_ctx.url.searchParams.set("p", page.toString());
+    navigate(page_ctx.url);
+  }
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-start py-3 gap-5 pb-5">
@@ -87,9 +89,9 @@ const query = useInfiniteQuery({
         </div>
       )}
 
-      {error && error?.length > 0 && (
+      {error && (
         <div className="flex h-full  w-full items-center justify-center p-2">
-          <PBReturnedUseQueryError error={error[0]} />
+          <PBReturnedUseQueryError error={error} />
         </div>
       )}
       {/* projects list */}
@@ -103,17 +105,23 @@ const query = useInfiniteQuery({
           })}
       </div>
 
-      <button
-        onClick={() => query.fetchNextPage()}
-        disabled={!query.hasNextPage || query.isFetchingNextPage}
-        className="btn btn-sm btn-outline"
-      >
-        {query.isFetchingNextPage
-          ? "Loading more..."
-          : query.hasNextPage
-          ? "Load More"
-          : "Nothing more to load"}
-      </button>
+      <div className="join">
+        {pages_arr.map((item) => {
+          return (
+            <button
+             key={item}
+              onClick={() => goToPage(item)}
+              className={
+                item === page_number
+                  ? "join-item btn btn-sm btn-active"
+                  : "join-item btn btn-sm"
+              }
+            >
+              {item}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
