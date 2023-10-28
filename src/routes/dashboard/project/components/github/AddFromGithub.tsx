@@ -3,6 +3,8 @@ import { TheFormModal } from "@/components/modal/TheFormModal";
 import { GithubIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 ;import { SherpaProjectsResponse, SherpaUserResponse } from "@/lib/pb/db-types";
+import { SkeletonLoader } from "@/components/navigation/loaders/SkeletonLoader";
+import { SearchGithubprojects } from "./SearchGithubprojects";
 
 
 interface AddFromGithubProps {
@@ -38,7 +40,7 @@ return (
         />
 
     </div>
-    {/* <Suspense fallback={<SkeletonLoader items={9}/>}>
+    <Suspense fallback={<SkeletonLoader items={9}/>}>
     <SearchGithubprojects
       project={project}
       github_username={profile?.github_username ?? ""}
@@ -46,7 +48,7 @@ return (
       modal_id={modal_id}
       keyword={keyword}
     />
-    </Suspense> */}
+    </Suspense>
     </div>
   </TheFormModal>
 );

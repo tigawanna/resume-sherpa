@@ -16,6 +16,15 @@ export async function getUserRepos(input: { owner: string }) {
             if (data.message && data.documentation_url) throw new Error(data.message)
             return data
         })
+        .catch((error:any)=>{
+            console.log("getUserRepo error ============= ", error)
+            return {
+                error: {
+                    message: error.message,
+                    original_error: error,
+                },
+            };
+        })
 }
 
 export async function searchUserRepos(input: { owner: string, keyword: string }) {
@@ -28,6 +37,15 @@ export async function searchUserRepos(input: { owner: string, keyword: string })
             if (data.message && data.documentation_url) throw new Error(data.message)
             return data
         })
+        .catch((error: any) => {
+            console.log(" searchUserRepos error ============= ", error.message)
+            return {
+                error: {
+                    message: error.message,
+                    original_error: error,
+                },
+            };
+        })
 }
 
 
@@ -39,6 +57,15 @@ export async function getOneRepo(input: { owner: string, repo: string }) {
             if (data.message && data.documentation_url) throw new Error(data.message)
             return data
         })
+        .catch((error: any) => {
+            console.log("getOneRepo error ============= ", error)
+            return {
+                error: {
+                    message: error.message,
+                    original_error: error,
+                },
+            };
+        })
 }
 
 export async function getOneRepoLanguages(input: { owner: string, repo: string }) {
@@ -48,6 +75,15 @@ export async function getOneRepoLanguages(input: { owner: string, repo: string }
             // @ts-expect-error
             if (data.message && data.documentation_url) throw new Error(data.message)
             return Object.keys(data)
+        })
+        .catch((error: any) => {
+            console.log("getOneRepoLanguages error ============= ",error)
+            return {
+                error: {
+                    message: error.message,
+                    original_error: error,
+                },
+            };
         })
 }
 
@@ -80,6 +116,7 @@ export async function getOneRepoPackages(input: { owner: string, repo: string })
             return []
         })
         .catch((error: any) => {
+            console.log("getOneRepoPackages error ================  ",error)
             return {
                 error: {
                     message: error.message,
@@ -99,6 +136,12 @@ export async function getProfileProject(input: { owner: string, repo: string }){
         if (one_repo_pkgs && "error" in one_repo_pkgs) {
             throw one_repo_pkgs
         }
+        if (one_repo && "error" in one_repo) {
+            throw one_repo
+        }
+        if (one_repo_langs && "error" in one_repo_langs) {
+            throw one_repo_langs
+        }
         console.log("one repo  ==== ",one_repo)
         const random_number = Math.floor(Math.random() * 10000)
         const project = {
@@ -110,8 +153,9 @@ export async function getProfileProject(input: { owner: string, repo: string }){
             libraries: one_repo_pkgs?.join(",") ?? "",
         }
         return project as Omit<SherpaProjectsCreate,"user" >
-    } catch (error: any) {
-
+    } 
+    catch (error: any) {
+        console.log("getProfileProject error========= ",error)
         return {
             error: {
                 message: error.message,

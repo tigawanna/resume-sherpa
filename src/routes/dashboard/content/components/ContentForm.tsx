@@ -77,7 +77,7 @@ export function ContentForm({ default_value, updating }: ContentFormProps) {
             }
             if (res.data) {
               toast("profile updated successfully", { type: "success" });
-              // navigate("/dashboard/content");
+              navigate("/dashboard/content");
             }
           })
           .catch((error) =>

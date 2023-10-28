@@ -52,7 +52,7 @@ const query = useInfiniteQuery({
       ?.filter((item) => item);
 
   return (
-    <div className="relative flex justify-center h-full w-full flex-col gap-2 p-5">
+    <div className="flex h-full w-full flex-col items-center justify-start py-3 gap-5 pb-5">
       {/* header+ search bar + add new project link */}
       <div className="sticky top-[5%] flex flex-wrap w-full items-center justify-evenly p-2 gap-3">
         <h2 className="text-2xl font-bold hidden sm:flex">Projects</h2>
@@ -94,14 +94,14 @@ const query = useInfiniteQuery({
       )}
       {/* projects list */}
 
-        <div className="flex h-full w-full flex-wrap  gap-2 px-5 pb-5 pt-2">
-          {data &&
-            data.map((project) => {
-              if (project) {
-                return <ProjectCard key={project?.id} item={project} />;
-              }
-            })}
-        </div>
+      <div className="flex w-full flex-wrap items-center justify-start px-7 gap-2">
+        {data &&
+          data.map((project) => {
+            if (project) {
+              return <ProjectCard key={project?.id} item={project} />;
+            }
+          })}
+      </div>
 
       <button
         onClick={() => query.fetchNextPage()}

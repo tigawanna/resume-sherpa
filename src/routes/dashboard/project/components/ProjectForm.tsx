@@ -70,9 +70,17 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     if (updating) {
       update_mutation
         .mutateAsync(input)
-        .then((res) =>{ 
-        }).catch((error) =>
-          toast(error.message, { type: "error", autoClose: false })
+        .then((res) => {
+          if (res.data) {
+            toast("Project updated successfully", { type: "success" });
+            navigate("/dashboard/project");
+          }
+          if (res.error) {
+            toast(res.error.message, { type: "error", autoClose: false });
+          }
+        })
+        .catch((error) =>
+          toast(error.message, { type: "error", autoClose: false }),
         );
     } else {
       create_mutation
@@ -110,7 +118,7 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         <TheTextInput
           field_key={"name"}
           field_name={"Name"}
-          value={input["name"]}
+          val={input["name"]}
           onChange={handleChange}
           editing={editing}
         />
@@ -126,7 +134,7 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         <TheTextInput
           field_key={"repo_url"}
           field_name={"Github Url"}
-          value={input["repo_url"]}
+          val={input["repo_url"]}
           type="url"
           onChange={handleChange}
           editing={editing}

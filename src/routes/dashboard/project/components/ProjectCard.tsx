@@ -34,39 +34,35 @@ function handleDelete(id: string) {
     <div
       key={item.id}
       className="flex w-full flex-col justify-center gap-1 rounded-md border p-1 shadow-sm
-      shadow-accent hover:border-accent sm:w-[45%] lg:w-[30%] relative"
+      shadow-accent hover:border-accent sm:w-[45%] lg:w-[30%] relative "
     >
-    <Link
-          href={`/dashboard/project/${item.id}`}
-          key={item.id}
-          className="hover:bg-base-300 hover:text-accent w-full rounded-lg"
-        >
-          <h2 className="text-lg font-bold p-2">{item.name}</h2>
-          <figure className="h-full w-full ">
-            <Image
-              src={item.image_url ?? 'https://picsum.photos/id/4/500/333'}
-              alt={item.name}
-              loading="lazy"
-              layout="fullWidth"
-              height={200}
-              className="h-auto w-full"
-            />
-          </figure>
-        </Link>
-          <div className="flex w-full items-start justify-between gap-1">
-            <p className="line-clamp-2 px-2 py-1 text-sm">{item.description}</p>
-            <div className="w-fit">
-            <DeleteConfirm
+      <Link
+        href={`/dashboard/project/${item.id}`}
+        key={item.id}
+        className="hover:bg-base-300 hover:text-accent w-full rounded-lg"
+      >
+        <h2 className="text-lg font-bold p-2">{item.name}</h2>
+        <figure className="h-full w-full ">
+          <Image
+            src={item.image_url ?? "https://picsum.photos/id/4/500/333"}
+            alt={item.name}
+            loading="lazy"
+            layout="fullWidth"
+            height={200}
+            className="h-auto w-full"
+          />
+        </figure>
+      </Link>
+      <div className="flex w-full items-start justify-between gap-1">
+        <p className="line-clamp-2 px-2 py-1 text-sm">{item.description}</p>
+        <div className="w-fit">
+          <DeleteConfirm
             is_loading={delete_mutation.isPending}
             handleDelete={() => handleDelete(item.id)}
             modal_id={modal_id}
           />
-          </div>
-          </div>
-
-
-    
-
+        </div>
+      </div>
     </div>
   );
 }
