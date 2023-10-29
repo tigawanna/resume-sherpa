@@ -39,26 +39,24 @@ function handleDelete(id: string) {
     >
       <div className="flex gap-2 items-start justify-between">
         <Link
-        href={`/dashboard/experience/${item?.id}`}
-         className=" hover:text-accent w-full rounded-lg"
-      >
-        <h3 className="text-2xl font-bold">{item?.company}</h3>
-        <h3 className="text-lg">{item?.position}</h3>
-        <p className="line-clamp-3">{item?.description}</p>
-      </Link>
-          <DeleteConfirm
+          href={`/dashboard/experience/${item?.id}`}
+          className=" hover:text-accent max-w-[90%] rounded-lg"
+        >
+          <h3 className="text-2xl font-bold">{item?.company}</h3>
+          <h3 className="text-lg">{item?.position}</h3>
+          <p className="line-clamp-3">{item?.description}</p>
+        </Link>
+        <DeleteConfirm
           is_loading={delete_mutation.isPending}
           handleDelete={() => handleDelete(item?.id!)}
           modal_id={modal_id}
         />
       </div>
 
-
       <div className=" flex w-[90%] items-center justify-between border-t border-t-accent text-sm">
         <h3>From : {new Date(item?.from)?.toISOString().split("T")[0]}</h3>
         <h3>To : {new Date(item?.to)?.toISOString().split("T")[0]}</h3>
       </div>
-
     </div>
   );
 }

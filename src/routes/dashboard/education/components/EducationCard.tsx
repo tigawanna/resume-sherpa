@@ -36,10 +36,10 @@ function handleDelete(id: string) {
       className="flex w-full flex-col justify-center gap-1 rounded-md border p-2 shadow-sm
       shadow-accent hover:border-accent sm:w-[45%] lg:w-[30%] "
     >
-      <div className="flex gap-2 items-start justify-between">
+      <div className="flex gap-2 items-start justify-between w-full">
       <Link
         href={`/dashboard/education/${item?.id}`}
-        className=" hover:text-accent w-full rounded-lg"
+        className=" hover:text-accent max-w-[90%] rounded-lg"
       >  <h3 className="text-2xl font-bold">{item.school}</h3>
         <h3 className="text-lg">{item.field}</h3>
         <h3 className="">{item.qualification}</h3>
