@@ -1,55 +1,55 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Edit } from "lucide-react";
-import { navigate } from "rakkasjs";
 import { TheTextAreaInput } from "@/components/form/inputs/TheTextArea";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { useFormHook } from "@/components/form/useForm";
+import { navigate } from "rakkasjs";
 import { FormHeader } from "@/components/form/inputs/FormHeader";
-import {
-  SherpaExperienceCreate,
-  SherpaExperienceResponse,
-  SherpaExperienceUpdate,
-} from "@/lib/pb/db-types";
 import { useMutation } from "@tanstack/react-query";
+import {
+  SherpaInternshipCreate,
+  SherpaInternshipResponse,
+  SherpaInternshipUpdate,
+} from "@/lib/pb/db-types";
 import { tryCatchWrapper } from "@/utils/async";
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { dateToString } from "@/utils/helpers/others";
 import { SubmitButton } from "@/components/form/inputs/SubmitButton";
 
-interface ExperienceFormProps {
-  default_value?: SherpaExperienceResponse | null;
+interface InternshipFormProps {
+  default_value?: SherpaInternshipResponse | null;
   updating?: boolean;
 }
 
-export function ExperienceForm({
+export function InternshipForm({
   default_value,
   updating,
-}: ExperienceFormProps) {
+}: InternshipFormProps) {
   const { user_query: user, page_ctx } = useUser();
   const create_mutation = useMutation({
-    mutationFn: async (vars: SherpaExperienceCreate) => {
+    mutationFn: async (vars: SherpaInternshipCreate) => {
       return tryCatchWrapper(
-        page_ctx.locals.pb?.collection("sherpa_experience").create(vars),
+        page_ctx.locals.pb?.collection("sherpa_internship").create(vars),
       );
     },
   });
   const update_mutation = useMutation({
-    mutationFn: async (vars: SherpaExperienceUpdate) => {
+    mutationFn: async (vars: SherpaInternshipUpdate) => {
       return tryCatchWrapper(
         page_ctx.locals.pb
-          ?.collection("sherpa_experience")
+          ?.collection("sherpa_internship")
           .update(default_value?.id!, vars),
       );
     },
   });
 
   const { handleChange, input, setError, setInput, validateInputs } =
-    useFormHook<Omit<SherpaExperienceResponse, "id" | "created" | "updated">>({
+    useFormHook<Omit<SherpaInternshipResponse, "id" | "created" | "updated">>({
       initialValues: {
         company: default_value?.company ?? "",
+        role: default_value?.role ?? "",
         description: default_value?.description ?? "",
-        position: default_value?.position ?? "",
         user: default_value?.user ?? user?.data?.id!,
         from: dateToString(default_value?.from) ?? dateToString(new Date()),
         to: dateToString(default_value?.to) ?? dateToString(new Date()),
@@ -67,10 +67,15 @@ export function ExperienceForm({
           .mutateAsync(input)
           .then((res) => {
             if (res.error) {
-              toast(res.error.message, { type: "error", autoClose: false });
+              toast(res.error.message, {
+                type: "error",
+                autoClose: false,
+              });
             }
             if (res.data) {
-              toast("Experiance updated successfully", { type: "success" });
+              toast("Internship updated successfully", {
+                type: "success",
+              });
             }
           })
           .catch((error) =>
@@ -87,10 +92,10 @@ export function ExperienceForm({
               });
             }
             if (res.data) {
-              toast("Experiance added successfully", {
+              toast("Interndhip added successfully", {
                 type: "success",
               });
-              navigate("/dashboard/experience");
+              navigate("/dashboard/internship");
             }
           })
           .catch((error) =>
@@ -112,8 +117,11 @@ export function ExperienceForm({
         onSubmit={handleSubmit}
         className="flex h-full w-full flex-col items-center justify-center gap-2"
       >
-        <FormHeader editing={editing} updating={updating} name="Experience" />
+  
+          <FormHeader editing={editing} updating={updating} name="Internship" />
+       
         <TheTextInput
+          required
           field_key={"company"}
           val={input["company"]}
           // input={input}
@@ -124,27 +132,30 @@ export function ExperienceForm({
           editing={editing}
         />
         <TheTextInput
-          field_key={"position"}
-          val={input["position"]}
+          required
+          field_key={"role"}
+          val={input["role"]}
           // input={input}
-          field_name={"Job Position"}
+          field_name={"Role"}
           className="input input-bordered input-sm w-full  "
           label_classname="text-base capitalize"
           onChange={handleChange}
           editing={editing}
         />
         <TheTextAreaInput
+          required
           field_key={"description"}
-          value={input["description"] ?? ""}
+          value={input["description"]}
           // input={input}
-          field_name={"Job Description"}
+          field_name={"Description"}
+          className="min-h-[150px]"
           label_classname="text-base capitalize"
-          className="min-h-[200px]"
           onChange={handleChange}
           editing={editing}
         />
+
         <div className="flex  w-full flex-col  items-center justify-evenly gap-2 sm:flex-row">
-          <TheTextInput<SherpaExperienceResponse>
+          <TheTextInput
             required
             field_key={"from"}
             val={dateToString(input["from"])}
@@ -163,7 +174,7 @@ export function ExperienceForm({
             }}
             editing={editing}
           />
-          <TheTextInput<SherpaExperienceResponse>
+          <TheTextInput
             required
             field_key={"to"}
             val={dateToString(input["to"])}
@@ -192,9 +203,8 @@ export function ExperienceForm({
                 />
               </div>
             )}
-            </div>
+          </div>
         )}
-        
       </form>
     </div>
   );

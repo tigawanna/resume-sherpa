@@ -86,8 +86,8 @@ export function Experience({}: ExperienceProps) {
           </div>
         </div>
       )}
-      {/* experiences */}
       <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
+      {/* experiences */}
       <div className="flex h-full w-full flex-wrap items-center justify-center gap-2">
         {data &&
           data.map((item) => {
