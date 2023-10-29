@@ -40,8 +40,7 @@ function handleDelete(id: string) {
       <Link
         href={`/dashboard/education/${item?.id}`}
         className=" hover:text-accent w-full rounded-lg"
-      >
-        <h3 className="text-2xl font-bold">{item.school}</h3>
+      >  <h3 className="text-2xl font-bold">{item.school}</h3>
         <h3 className="text-lg">{item.field}</h3>
         <h3 className="">{item.qualification}</h3>
       </Link>

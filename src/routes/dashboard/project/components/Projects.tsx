@@ -91,32 +91,33 @@ export function Projects({}: ProjectsProps) {
         </div>
       )}
       {/* projects list */}
-
-      <div className="flex w-full flex-wrap items-center justify-start px-7 gap-2">
-        {data &&
-          data.map((project) => {
-            if (project) {
-              return <ProjectCard key={project?.id} item={project} />;
-            }
-          })}
-      </div>
-
-      <div className="join">
-        {pages_arr.map((item) => {
-          return (
-            <button
-              key={item}
-              onClick={() => goToPage(item)}
-              className={
-                item === page_number
-                  ? "join-item btn btn-sm btn-active"
-                  : "join-item btn btn-sm"
+      <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
+        <div className="flex w-full flex-wrap items-center justify-start px-7 gap-2">
+          {data &&
+            data.map((project) => {
+              if (project) {
+                return <ProjectCard key={project?.id} item={project} />;
               }
-            >
-              {item}
-            </button>
-          );
-        })}
+            })}
+        </div>
+
+        <div className="join">
+          {pages_arr.map((item) => {
+            return (
+              <button
+                key={item}
+                onClick={() => goToPage(item)}
+                className={
+                  item === page_number
+                    ? "join-item btn btn-sm btn-active"
+                    : "join-item btn btn-sm"
+                }
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

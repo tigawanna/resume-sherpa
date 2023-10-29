@@ -69,7 +69,7 @@ export function Contents({}: ContentsProps) {
         </div>
         <Link
           href={`/dashboard/content/new`}
-          className="btn btn-sm btn-outline h-auto"
+          className="btn btn-outline  h-auto"
         >
           <Plus className="h-6 w-6" />
         </Link>
@@ -90,32 +90,33 @@ export function Contents({}: ContentsProps) {
       )}
 
       {/* contents */}
-
-      <div className="flex w-full flex-wrap items-center justify-center px-7 gap-2">
-        {data &&
-          data.map((item) => {
-            if (item) {
-              return <ContentCard item={item} key={item?.id} />;
-            }
-          })}
-      </div>
-
-      <div className="join">
-        {pages_arr.map((item) => {
-          return (
-            <button
-              key={item}
-              onClick={() => goToPage(item)}
-              className={
-                item === page_number
-                  ? "join-item btn btn-sm btn-active"
-                  : "join-item btn btn-sm"
+      <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
+        <div className="flex w-full flex-wrap items-center justify-center px-7 gap-2">
+          {data &&
+            data.map((item) => {
+              if (item) {
+                return <ContentCard item={item} key={item?.id} />;
               }
-            >
-              {item}
-            </button>
-          );
-        })}
+            })}
+        </div>
+
+        <div className="join">
+          {pages_arr.map((item) => {
+            return (
+              <button
+                key={item}
+                onClick={() => goToPage(item)}
+                className={
+                  item === page_number
+                    ? "join-item btn btn-sm btn-active"
+                    : "join-item btn btn-sm"
+                }
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

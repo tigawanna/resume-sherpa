@@ -28,7 +28,7 @@ export function Educations({}:EducationsProps){
           ?.collection("sherpa_education")
           .getList(page_number, 12, {
             sort: "-created",
-            filter: `school~"${debouncedValue}||qualification~"${debouncedValue}||field~"${debouncedValue}"`,
+            filter: `school~"${debouncedValue}"||qualification~"${debouncedValue}"||field~"${debouncedValue}"`,
           }),
       );
     },
@@ -52,7 +52,7 @@ export function Educations({}:EducationsProps){
   }
 
 return (
-  <div className="flex h-full w-full flex-col items-center justify-center gap-2 pb-5">
+  <div className="flex h-full w-full flex-col items-center  gap-2 pb-5">
     {/* header + search bar + add new link */}
     <div className="sticky top-[5%]   flex w-full flex-wrap items-center justify-evenly gap-3 p-2">
       <h3 className="text-2xl font-bold hidden md:flex">Education</h3>
@@ -83,31 +83,32 @@ return (
     )}
     {/* education */}
 
-    <div className="flex h-full w-full flex-wrap items-center justify-center gap-2">
-      {data &&
-        data.map((item) => {
-          if (item) {
-            return <EducationCard item={item} key={item.id} />;
-          }
-        })}
-    </div>
-
-    <div className="join">
-      {pages_arr.map((item) => {
-        return (
-          <button
-            key={item}
-            onClick={() => goToPage(item)}
-            className={
-              item === page_number
-                ? "join-item btn btn-sm btn-active"
-                : "join-item btn btn-sm"
+    <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
+      <div className="flex  w-full flex-wrap   gap-2">
+        {data &&
+          data.map((item) => {
+            if (item) {
+              return <EducationCard item={item} key={item.id} />;
             }
-          >
-            {item}
-          </button>
-        );
-      })}
+          })}
+      </div>
+      <div className="join">
+        {pages_arr.map((item) => {
+          return (
+            <button
+              key={item}
+              onClick={() => goToPage(item)}
+              className={
+                item === page_number
+                  ? "join-item btn btn-sm btn-active"
+                  : "join-item btn btn-sm"
+              }
+            >
+              {item}
+            </button>
+          );
+        })}
+      </div>
     </div>
   </div>
 );
