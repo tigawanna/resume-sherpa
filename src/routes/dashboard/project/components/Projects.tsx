@@ -1,23 +1,19 @@
 import { Plus } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { Link, navigate, usePageContext, useSSQ } from "rakkasjs";
-import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { Suspense, useState } from "react";
-import { useDebouncedValue } from "@/utils/hooks/debounce";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
-import { ReturnedUseQueryEror } from "@/components/error/ReturnedUseQueryEror";
 import { tryCatchWrapper } from "@/utils/async";
 import { useSearchWithQuery } from "@/utils/hooks/search";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
 import { numberToArray } from "@/utils/helpers/others";
-
 
 interface ProjectsProps {}
 
 export function Projects({}: ProjectsProps) {
-const page_ctx= usePageContext()
-const { debouncedValue, isDebouncing, keyword, setKeyword } = useSearchWithQuery();
+  const page_ctx = usePageContext();
+  const { debouncedValue, isDebouncing, keyword, setKeyword } =
+    useSearchWithQuery();
   const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "1") ?? 1;
 
   const query = useQuery({
@@ -109,7 +105,7 @@ const { debouncedValue, isDebouncing, keyword, setKeyword } = useSearchWithQuery
         {pages_arr.map((item) => {
           return (
             <button
-             key={item}
+              key={item}
               onClick={() => goToPage(item)}
               className={
                 item === page_number
