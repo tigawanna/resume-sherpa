@@ -14,8 +14,8 @@ import { useUser } from '@/utils/hooks/tanstack-query/useUser';
 interface MiniSettingsModalProps {}
 
 export function MiniSettingsModal({}: MiniSettingsModalProps) {
-const {query} = useUser()
-const user = query?.data
+const {user_query} = useUser()
+const user = user_query?.data
   const [open, setOpen] = useState(false);
   return (
     <DropdownMenu modal open={open} onOpenChange={setOpen}>
@@ -23,7 +23,7 @@ const user = query?.data
         <Button variant="ghost" className="relative h-7 w-7 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user?.avatar} alt="@shadcn" />
-            <AvatarFallback>{user?.username.slice(0, 2)}</AvatarFallback>
+            <AvatarFallback>{user?.username?.slice(0, 2)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

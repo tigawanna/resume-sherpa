@@ -3,11 +3,9 @@ import { ProfileComponenst } from "./components/profile/ProfileComponent";
 
 
 export default function DashboadPage({}: PageProps) {
-
-  // console.log("user in dashboard page", user);
-  return (
+return (
     <div className="w-full h-full min-h-screen bg-base-200 flex flex-col gap-5">
-    <ProfileComponenst/>
-      </div>
+       <ProfileComponenst/>
+     </div>
   );
 }

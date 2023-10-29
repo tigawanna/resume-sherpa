@@ -11,13 +11,13 @@ export function useUser(){
             return locals.pb?.authStore.clear();
         },
         onSuccess:()=>{
-            qc.invalidateQueries({ queryKey: ['user'] })
+            qc.invalidateQueries({ queryKey: ['sherpa_user'] })
             window?.location&&window?.location.reload();
         }
     })
     
     const query = useQuery({
-        queryKey: ['user'],
+        queryKey: ['sherpa_user'],
         queryFn:()=>{
             return locals.pb?.authStore.model as SherpaUserResponse
         },

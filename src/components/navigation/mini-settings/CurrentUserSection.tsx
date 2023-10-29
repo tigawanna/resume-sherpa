@@ -21,7 +21,7 @@ export function CurrentUserSection({setOpen}:CurrentUserSectionProps){
 
   async function logoutUser() {
     await artificialDelay(2000);
-    user_mutation.mutate()
+    user_mutation.mutateAsync()
 }
 
 
@@ -67,11 +67,9 @@ return (
         disabled={user_mutation.isPending}
       >
         Log out
-        {user_mutation.isPending ? (
-          <Loader className="w-4 h-4  animate-spin" />
-        ) : (
-          <LogOut className="w-4 h-4 ml-2" />
-        )}
+        <LogOut className="w-4 h-4 ml-2" />
+        {user_mutation.isPending&&<Loader className="w-4 h-4  animate-spin" />}
+        
       </Button>
     </span>
   </div>

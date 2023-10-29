@@ -26,7 +26,12 @@ export function ProfileComponenst({}: ProfileComponentProps) {
     queryKey: ["sherpa_user", id],
     queryFn: () =>
       tryCatchWrapper(pb.collection("sherpa_user").getOne(id ?? "")),
-  });
+      refetchOnMount:true,
+      refetchOnWindowFocus:true,
+     
+
+  },
+  );
   const profile = query.data?.data;
 
   const [input, setInput] = useState<SherpaUserUpdate>({

@@ -4,8 +4,8 @@ import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 interface UserCircleProps {}
 
 export function UserCircle({}: UserCircleProps) {
- const {query} = useUser();
- const user = query?.data
+ const {user_query} = useUser();
+ const user = user_query?.data
   return (
     <div className="w-7 h-7 flex items-center justify-center rounded-full">
       {user?.email ? (
