@@ -13,10 +13,10 @@ import { SherpaUserCreate } from "@/lib/pb/db-types";
 import { Loader } from "lucide-react";
 
 interface SignupFormProps {
-  actionData: ActionErrorData<Partial<TSignupformSchema>>;
+
 }
 
-export function SignUpForm({ actionData }: SignupFormProps) {
+export function SignUpForm({ }: SignupFormProps) {
   const show_form = true;
   const [show, setShow] = useState(false);
   const page_ctx = usePageContext();
@@ -96,7 +96,7 @@ export function SignUpForm({ actionData }: SignupFormProps) {
             />
 
             <TheTextInput
-              field_key={""}
+              field_key={"passwordConfirm"}
               field_name="passwordConfirm"
               type={show ? "text" : "password"}
               required

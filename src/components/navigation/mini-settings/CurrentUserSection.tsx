@@ -20,7 +20,7 @@ export function CurrentUserSection({setOpen}:CurrentUserSectionProps){
 
 
   async function logoutUser() {
-    await artificialDelay(2000);
+    await artificialDelay(3000);
     user_mutation.mutateAsync()
 }
 
