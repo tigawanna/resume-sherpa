@@ -92,7 +92,7 @@ export function Projects({}: ProjectsProps) {
       )}
       {/* projects list */}
       <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
-        <div className="flex w-full flex-wrap items-center justify-start px-7 gap-2">
+        <div className="flex w-full flex-wrap items-center justify-start  gap-2">
           {data &&
             data.map((project) => {
               if (project) {
