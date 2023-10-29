@@ -117,6 +117,7 @@ export function EducationForm({
       >
         <FormHeader editing={editing} updating={updating} name="Education" />
         <TheTextInput<SherpaEducationResponse>
+          required
           field_key={"school"}
           val={input["school"]}
           // input={input}
@@ -127,6 +128,7 @@ export function EducationForm({
           editing={editing}
         />
         <TheTextInput<SherpaEducationResponse>
+          required
           field_key={"field"}
           val={input["field"]}
           // input={input}
@@ -165,6 +167,7 @@ export function EducationForm({
 
         <div className="flex  w-full flex-col  items-center justify-evenly gap-2 sm:flex-row">
           <TheTextInput<SherpaEducationResponse>
+            required
             field_key={"from"}
             val={dateToString(input["from"])}
             type="date"
@@ -176,13 +179,14 @@ export function EducationForm({
               setInput((prev) => {
                 return {
                   ...prev,
-                  from: dateToString(e.target.value)
+                  from: dateToString(e.target.value),
                 };
               });
             }}
             editing={editing}
           />
           <TheTextInput<SherpaEducationResponse>
+            required
             field_key={"to"}
             val={dateToString(input["to"])}
             type="date"
@@ -192,7 +196,7 @@ export function EducationForm({
             label_classname="text-base capitalize"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setInput((prev) => {
-                return { ...prev, to:dateToString(e.target.value) };
+                return { ...prev, to: dateToString(e.target.value) };
               });
             }}
             editing={editing}
