@@ -1,5 +1,6 @@
 import { DeleteConfirm } from "@/components/modal/DeleteConfirm";
 import { SherpaContentResponse } from "@/lib/pb/db-types";
+import { dateToString } from "@/utils/helpers/others";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, usePageContext } from "rakkasjs";
 import { toast } from "react-toastify";
@@ -55,7 +56,7 @@ const qc = useQueryClient()
         <h3 className="border border-accent rounded-lg  w-fit px-2">
           {item.type}
         </h3>
-        <h3>{new Date(item?.created).toDateString()}</h3>
+        <h3>{dateToString(item?.created)}</h3>
       </div>
     </div>
   );

@@ -82,14 +82,14 @@ return (
         <div className="rounded-lg border p-2 text-info">no matches found</div>
       </div>
     )}
-    {/* contents */}
+    {/* job applications */}
 
-    <div className="flex  w-full h-full  flex-col justify-between items-center gap-2 px-5">
-      <div className="flex h-full w-full flex-wrap items-center justify-center gap-2">
+    <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
+      <div className="flex w-full flex-wrap items-center justify-start  gap-2">
         {data &&
           data.map((item) => {
             if (item) {
-              return <JobApplicationCard key={item.id} item={item} />
+              return <JobApplicationCard key={item.id} item={item} />;
             }
           })}
       </div>

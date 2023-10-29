@@ -47,8 +47,8 @@ function handleDelete(id: string) {
           className="flex w-full flex-col justify-center gap-1 rounded-md hover:text-accent
             p-2  "
         >
-          <h3 className="text-2xl font-bold">{item.title}</h3>
-          <p className="line-clamp-2">{item.description}</p>
+          <h3 className="text-xl font-bold">{item.title}</h3>
+          <p className="line-clamp-2 text-sm">{item.description}</p>
         </Link>
         <div className="flex items-start h-full">
           <DeleteConfirm

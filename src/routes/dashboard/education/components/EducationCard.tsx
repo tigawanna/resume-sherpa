@@ -1,5 +1,6 @@
 import { DeleteConfirm } from "@/components/modal/DeleteConfirm";
 import { SherpaEducationResponse } from "@/lib/pb/db-types";
+import { dateToString } from "@/utils/helpers/others";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, usePageContext } from "rakkasjs";
 import { toast } from "react-toastify";
@@ -37,26 +38,25 @@ function handleDelete(id: string) {
       shadow-accent hover:border-accent sm:w-[45%] lg:w-[30%] "
     >
       <div className="flex gap-2 items-start justify-between w-full">
-      <Link
-        href={`/dashboard/education/${item?.id}`}
-        className=" hover:text-accent max-w-[90%] rounded-lg"
-      >  <h3 className="text-2xl font-bold">{item.school}</h3>
-        <h3 className="text-lg">{item.field}</h3>
-        <h3 className="">{item.qualification}</h3>
-      </Link>
+        <Link
+          href={`/dashboard/education/${item?.id}`}
+          className=" hover:text-accent max-w-[90%] rounded-lg"
+        >
+          {" "}
+          <h3 className="text-xl font-bold line-clamp-1">{item.school}</h3>
+          <h3 className="line-clamp-2 invert-[20%]">{item.field}</h3>
+          <h3 className="line-clamp-1 text-sm">{item.qualification}</h3>
+        </Link>
         <DeleteConfirm
           is_loading={delete_mutation.isPending}
           handleDelete={() => handleDelete(item?.id!)}
           modal_id={modal_id}
         />
       </div>
-
       <div className=" flex w-[90%] items-center justify-between border-t border-t-accent text-sm">
-        <h3>From : {new Date(item?.from)?.toISOString().split("T")[0]}</h3>
-        <h3>To : {new Date(item?.to)?.toISOString().split("T")[0]}</h3>
+        <h3>From : {dateToString(item.from)}</h3>
+        <h3>To : {dateToString(item.to)}</h3>
       </div>
-
-
     </div>
   );
 }

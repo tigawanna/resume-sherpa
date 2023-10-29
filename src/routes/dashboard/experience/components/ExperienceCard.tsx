@@ -1,5 +1,6 @@
 import { DeleteConfirm } from "@/components/modal/DeleteConfirm";
 import { SherpaExperienceResponse } from "@/lib/pb/db-types";
+import { dateToString } from "@/utils/helpers/others";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {  Link, usePageContext } from "rakkasjs";
 import { toast } from "react-toastify";
@@ -42,9 +43,9 @@ function handleDelete(id: string) {
           href={`/dashboard/experience/${item?.id}`}
           className=" hover:text-accent max-w-[90%] rounded-lg"
         >
-          <h3 className="text-2xl font-bold">{item?.company}</h3>
-          <h3 className="text-lg">{item?.position}</h3>
-          <p className="line-clamp-3">{item?.description}</p>
+          <h3 className="text-xl font-bold">{item?.company}</h3>
+          <h3 className="invert-[20%] line-clamp-1">{item?.position}</h3>
+          <p className="line-clamp-3 text-sm">{item?.description}</p>
         </Link>
         <DeleteConfirm
           is_loading={delete_mutation.isPending}
@@ -54,8 +55,8 @@ function handleDelete(id: string) {
       </div>
 
       <div className=" flex w-[90%] items-center justify-between border-t border-t-accent text-sm">
-        <h3>From : {new Date(item?.from)?.toISOString().split("T")[0]}</h3>
-        <h3>To : {new Date(item?.to)?.toISOString().split("T")[0]}</h3>
+        <h3>From : {dateToString(item.from)}</h3>
+        <h3>To : {dateToString(item.to)}</h3>
       </div>
     </div>
   );

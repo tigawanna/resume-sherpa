@@ -41,7 +41,7 @@ function handleDelete(id: string) {
         key={item.id}
         className="hover:bg-base-300 hover:text-accent w-full rounded-lg"
       >
-        <h2 className="text-lg font-bold p-2">{item.name}</h2>
+        <h2 className="text-xl font-bold p-2">{item.name}</h2>
         <figure className="h-full w-full ">
           <Image
             src={item.image_url ?? "https://picsum.photos/id/4/500/333"}

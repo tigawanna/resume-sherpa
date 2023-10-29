@@ -58,7 +58,7 @@ export function Experience({}: ExperienceProps) {
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 pb-5">
       {/* header + search bar + add new link */}
       <div className="sticky top-[5%] flex flex-wrap w-full items-center justify-evenly p-2 gap-3">
-        <h3 className="text-2xl font-bold hiddeb md:flex">Experiance</h3>
+        <h3 className="text-2xl font-bold hidden md:flex">Experiance</h3>
         <div className=" relative flex md:min-w-[50%] min-w-[70%]  items-center justify-center gap-1">
           <TheTextInput
             label_classname="hidden"
@@ -87,33 +87,32 @@ export function Experience({}: ExperienceProps) {
         </div>
       )}
       <div className="flex  w-full h-full flex-col justify-between items-center gap-2 px-5">
-      {/* experiences */}
-      <div className="flex h-full w-full flex-wrap items-center justify-center gap-2">
-        {data &&
-          data.map((item) => {
-            if (item) {
-              return <ExperienceCard key={item.id} item={item} />;
-            }
-          })}
-      </div>
-      <div className="join">
-        {pages_arr.map((item) => {
-          return (
-            <button
-              key={item}
-              onClick={() => goToPage(item)}
-              className={
-                item === page_number
-                  ? "join-item btn btn-sm btn-active"
-                  : "join-item btn btn-sm"
+        <div className="flex w-full flex-wrap items-center justify-start  gap-2">
+          {data &&
+            data.map((item) => {
+              if (item) {
+                return <ExperienceCard key={item.id} item={item} />;
               }
-            >
-              {item}
-            </button>
-          );
-        })}
+            })}
+        </div>
+        <div className="join">
+          {pages_arr.map((item) => {
+            return (
+              <button
+                key={item}
+                onClick={() => goToPage(item)}
+                className={
+                  item === page_number
+                    ? "join-item btn btn-sm btn-active"
+                    : "join-item btn btn-sm"
+                }
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </div>
     </div>
   );
 }
