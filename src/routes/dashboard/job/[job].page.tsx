@@ -1,21 +1,17 @@
-import { PageProps, usePageContext } from "rakkasjs";
-import { InternshipForm } from "./components/InternshipForm";
+import { PageProps, usePageContext} from "rakkasjs"
+import { MainJobApplicationForm } from "./components/MainJobApplicationForm";
 import { useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
 import { tryCatchWrapper } from "@/utils/async";
 
-
-
-
-
-export default function InternshipPage({params}:PageProps) {
+export default function JobApplicationPage({params}:PageProps) {
   const page_ctx = usePageContext();
   const query = useQuery({
-    queryKey: ["sherpa_internship", params.internship],
+    queryKey: ["sherpa_job_application", params.internship],
     queryFn: () => {
       return tryCatchWrapper(
         page_ctx.locals.pb
-          ?.collection("sherpa_internship")
+          ?.collection("sherpa_job_application")
           .getOne(params.internship),
       );
     },
@@ -34,16 +30,10 @@ export default function InternshipPage({params}:PageProps) {
       </div>
     );
   }
+  
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
-      <div className="flex w-[95%] flex-col gap-3 p-1 md:w-[80%] md:p-5 lg:w-[60%]">
-        <InternshipForm
-          default_value={query.data?.data}
-          updating={true}
-          />
-      </div>
+    <div className="flex h-full w-full items-center justify-center">
+        <MainJobApplicationForm default_value={query.data?.data} updating={true} />
     </div>
   );
 }
-
-
