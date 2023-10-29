@@ -76,9 +76,7 @@ export function ContentForm({ default_value, updating }: ContentFormProps) {
               toast(res.error.message, { type: "error", autoClose: false });
             }
             if (res.data) {
-              toast("profile updated successfully", { type: "success" });
-              navigate("/dashboard/content");
-            }
+              toast("profile updated successfully", { type: "success" })}
           })
           .catch((error) =>
             toast(error.message, { type: "error", autoClose: false }),
@@ -187,14 +185,7 @@ export function ContentForm({ default_value, updating }: ContentFormProps) {
 
         {editing && (
           <div className="flex w-full items-center justify-center">
-            {/* <button className="btn btn-sm  mt-2 w-[80%] sm:w-[70%] md:w-[40%] ">
-              {create_mutation.isPending || update_mutation.isPending ? (
-                <Loader className="h-6 w-6 animate-spin" />
-              ) : (
-                <div></div>
-              )}
-              {updating ? "Update" : "Create"}
-            </button> */}
+
             <SubmitButton
               loading={create_mutation.isPending || update_mutation.isPending}
               

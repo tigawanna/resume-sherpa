@@ -7,16 +7,14 @@ import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEr
 
 export default function ContentPage({params}:PageProps) {
   const page_ctx = usePageContext()
-  const {} = useUser()
-
-    const query = useQuery({
-      queryKey: ["content", params.content],
-      queryFn: () => {
-        return tryCatchWrapper(
-          page_ctx.locals.pb?.collection("sherpa_content").getOne(params.content),
-        );
-      },
-    })
+  const query = useQuery({
+    queryKey: ["sherpa_content", params.content],
+    queryFn: () => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb?.collection("sherpa_content").getOne(params.content),
+      );
+    },
+  });
 
     if ( query.data?.error || query.error) {
       <PBReturnedUseQueryError error={query.data?.error??query.error} />;

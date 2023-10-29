@@ -11,33 +11,10 @@ import { numberToArray } from "@/utils/helpers/others";
 interface ContentsProps {}
 
 export function Contents({}: ContentsProps) {
+  
   const page_ctx = usePageContext();
-  const { debouncedValue, isDebouncing, keyword, setKeyword } =
-    useSearchWithQuery();
-
-  //  const query = useInfiniteQuery({
-  //   queryKey: ["sherpa_content", debouncedValue],
-  //   initialPageParam: 1,
-  //   queryFn: async ({ pageParam }) => {
-  //     // console.log("page arams  ====== ",pageParam)
-  //     return tryCatchWrapper(
-  //       page_ctx.locals.pb?.collection("sherpa_content").getList(pageParam,2, {
-  //         sort: "-created",
-  //         filter: `title~"${debouncedValue}"`,
-  //       }),
-  //     );
-  //   },
-
-  //   getNextPageParam: (lastPage, allPages) => {
-  //     if(lastPage?.data){
-  //       if(lastPage?.data?.totalPages > lastPage?.data?.page){
-  //         return lastPage?.data?.page  + 1;
-  //       }
-  //     }
-  //   },
-  // });
+  const { debouncedValue, isDebouncing, keyword, setKeyword } =useSearchWithQuery();
   const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "1") ?? 1;
-
   const query = useQuery({
     queryKey: ["sherpa_content", debouncedValue, page_number],
 
