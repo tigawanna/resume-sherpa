@@ -49,7 +49,7 @@ startClient({
     },
     extendPageContext(ctx) {
         ctx.locals.test = "CLIENT EXTEND PAGE CONTEXT";
-        console.log("============= CLIENT SIDE PB  ==============",ctx.locals.pb)
+        // console.log("============= CLIENT SIDE PB  ==============",ctx.locals.pb)
        if (!ctx.locals.pb){
           ctx.locals.pb = new PocketBase(
             import.meta.env.RAKKAS_PB_URL,

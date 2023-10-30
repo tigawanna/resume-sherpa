@@ -19,12 +19,12 @@ const query = useInfiniteQuery<ListResult<SherpaContentResponse>, Error, Infinit
         },
 
         getNextPageParam: (lastPage, allPages) => {
-          console.log({ lastPage, allPages });
+          // console.log({ lastPage, allPages });
           return lastPage.page + 1;
         },
       });
 
-console.log("query  ===== ",query)
+// console.log("query  ===== ",query)
 return (
 <div className="w-full h-full min-h-screen flex items-center justify-center">
   {JSON.stringify(query)}

@@ -21,7 +21,7 @@ export default function HackathonPage({params}:PageProps) {
     },
   });
 
-  console.log("query.dta  ==== ", query.data);
+  // console.log("query.dta  ==== ", query.data);
   if (query.data?.error || query.error) {
     <PBReturnedUseQueryError error={query.data?.error ?? query.error} />;
   }

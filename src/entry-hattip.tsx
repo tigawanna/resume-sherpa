@@ -78,9 +78,9 @@ export default createRequestHandler({
           if (ctx.locals.pb.authStore.isValid) {
             const user = ctx?.locals?.pb;
             ctx.queryClient.setQueryData("user", user?.authStore?.model);
-            console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
+            // console.log("===VALID USER , UPDATING POCKETBASE USER= ===");
           } else {
-            console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
+            // console.log("====INVALID USER , LOGGING OUT POCKETBASE= ===");
             ctx.locals.pb.authStore.clear();
             ctx.queryClient.setQueryData("user", null);
           }

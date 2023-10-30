@@ -19,7 +19,7 @@ const request_verfication_mutation = useMutation({
     );
   },
   onSuccess(data, variables, context) {
-    console.log("data === ",data)
+    // console.log("data === ",data)
     if (data.data) {
       qc.invalidateQueries({ queryKey: ["sherpa_user"] });
       pb.collection("sherpa_user").authRefresh();
