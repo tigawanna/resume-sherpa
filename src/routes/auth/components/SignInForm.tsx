@@ -1,4 +1,4 @@
-import { Link, navigate } from "rakkasjs";
+import { Link, navigate, usePageContext } from "rakkasjs";
 import { OAuthproviders } from "./OAuthProviders";
 import { Button } from "@/components/shadcn/ui/button";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
@@ -6,14 +6,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { emailPasswordLogin } from "@/lib/pb/client";
 import { toast } from "react-toastify";
 import { useFormHook } from "@/components/form/useForm";
-import { useState } from "react";
-import { Loader } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader, Unlock } from "lucide-react";
+import { tryCatchWrapper } from "@/utils/async";
 
 interface SignInFormProps {
 
 }
 
 export function SignInForm({  }: SignInFormProps) {
+  const page_ctx = usePageContext()
   const [show,setShow]=useState(false)
   const qc = useQueryClient();
   const show_form=true
@@ -24,6 +26,8 @@ export function SignInForm({  }: SignInFormProps) {
           usernameOrEmail:"",
         },
       });
+
+
   const mutation = useMutation(
     {
       mutationFn:(vars: { usernameOrEmail: string; password: string }) => {
@@ -47,6 +51,41 @@ export function SignInForm({  }: SignInFormProps) {
     },
   );
 
+    const pw_reset_request_mutation = useMutation({
+      mutationFn: (vars: { email: string }) => {
+        return tryCatchWrapper(
+          page_ctx.locals.pb
+            ?.collection("sherpa_user")
+            .requestPasswordReset(vars.email),
+        );
+      },
+      onError(error: any) {
+        toast(error.message, { type: "error", autoClose: false });
+      },
+      onSuccess(data) {
+        if (data && data?.data) {
+          toast("Password reset request sent, check your email", {
+            type: "success",
+          });
+    
+        }
+        if (data && data?.error) {
+          toast(data.error.message, { type: "error", autoClose: false });
+        }
+      },
+    });
+
+
+  // function resetPassordUrl(){
+  //   page_ctx.url.searchParams.get("reset_password")
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if(emailRegex.test(input.usernameOrEmail)){
+  //     page_ctx.url.searchParams.set("email", input.usernameOrEmail);
+  //   }
+  //   page_ctx.url.pathname = "/auth/reset"
+  //   return page_ctx.url.toString()
+  // }
+  
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     mutation.mutate(input)
@@ -96,9 +135,9 @@ export function SignInForm({  }: SignInFormProps) {
               size={"sm"}
             >
               {" "}
-              Sign in {mutation.isPending&&<Loader className="animate-spin"/>}
+              Sign in{" "}
+              {mutation.isPending && <Loader className="animate-spin" />}
             </Button>
-
           </form>
         )}
         {show_form && (
@@ -113,12 +152,27 @@ export function SignInForm({  }: SignInFormProps) {
         <OAuthproviders />
       </div>
       {show_form && (
-        <p className=" text-sm">
-          New here ? Create an account ?{" "}
-          <Link href="/auth/signup" className="text-accent">
-            Sign up
-          </Link>
-        </p>
+        <div className="flex flex-col gap-2">
+          <p className=" text-sm">
+            New here ? Create an account ?{" "}
+            <Link href="/auth/signup" className="text-accent">
+              Sign up
+            </Link>
+          </p>
+          <button
+            className="btn btn-outline btn-sm flex text-xs gap-2 h-2 "
+            disabled={pw_reset_request_mutation.isPending}
+            onClick={() =>
+              pw_reset_request_mutation.mutate({ email: input.usernameOrEmail })
+            }
+          >
+            <h3>Forgot password</h3>
+            <Unlock className="h-4 w-4 text-red-600" />
+            {pw_reset_request_mutation.isPending && (
+              <Loader className="animate-spin" />
+            )}
+          </button>
+        </div>
       )}
     </div>
   );

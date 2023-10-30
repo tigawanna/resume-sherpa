@@ -21,6 +21,8 @@ export function useUser(){
         queryFn:()=>{
             return locals.pb?.authStore.model as SherpaUserResponse
         },
+        refetchOnWindowFocus:true,
+        refetchOnMount:true
     });
 
     return { user_query:query, user_mutation:mutation,page_ctx,logout:mutation.mutate} 

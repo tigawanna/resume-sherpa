@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-interface IUseFormHook<T> {
+export interface IUseFormHook<T> {
   initialValues: T;
 }
-interface IUseFormError {
+export interface IUseFormError {
   name: string;
   message: string;
 }
@@ -21,9 +21,9 @@ export function useFormHook<T>({ initialValues }: IUseFormHook<T>) {
     });
   }
 
-  function validateInputs(ipts: T) {
+  function validateInputs(checker:(inpt:T)=>boolean) {
     setError({ name: "", message: "" });
-    return true;
+    return checker(input)
   }
 
   return { input, setInput, handleChange, error, setError, validateInputs };

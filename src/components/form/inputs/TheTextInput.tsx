@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { Input } from "@/components/shadcn/ui/input";
 import { Label } from "@/components/shadcn/ui/label";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface TheTextInputProps<T>
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -28,6 +28,18 @@ export function TheTextInput<T>({
       ? props.error_message
       : undefined
   );
+  useEffect(() => {
+    if(props.error_message){
+      setError((prev)=>{
+      if(prev !== props.error_message){
+        return props.error_message
+        }
+      return prev
+      })
+    }
+  },[props.error_message])
+  // console.log("the text input error message ",error_message)
+  // console.log("the text input props error message", props.error_message);
   const default_input_tw = error_message
     ? " input  input-sm w-full border-error border-2"
     : "input  input-sm w-full border-accent";

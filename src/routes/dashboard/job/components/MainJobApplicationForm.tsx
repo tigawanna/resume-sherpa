@@ -2,13 +2,9 @@ import { useFormHook } from '@/components/form/useForm';
 import { narrowOutError, tryCatchWrapper } from '@/utils/async';
 import { useMultiStepForm } from '@/utils/hooks/useMultiStepForm';
 import { JobBasicInfoForm } from './JobBasicInfoForm';
-import { CoverLetterForm } from './cover-letter/CoverLetterForm';
 import { handleJobApplicationSubmit } from './helpers/submit';
-import { ResumeForm } from './resume/ResumeForm';
-import { ResumeMultiStepForm } from './resume/steps/ResumeMutiStepForm';
 import { SherpaJobApplicationCreate, SherpaJobApplicationResponse, SherpaJobApplicationUpdate } from '@/lib/pb/db-types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TJobApplicationInputType } from '@/routes/api/helpers/prisma/job-application';
+import { useMutation, useQuery} from '@tanstack/react-query';
 import { useUser } from '@/utils/hooks/tanstack-query/useUser';
 
 

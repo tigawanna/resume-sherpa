@@ -1,7 +1,6 @@
 import { Button } from "@/components/shadcn/ui/button";
 import { OAuthproviders } from "./OAuthProviders";
 import { Link, navigate, usePageContext } from "rakkasjs";
-import { ActionErrorData } from "@/lib/rakkas/utils/actions";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { TSignupformSchema } from "./auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +10,7 @@ import { toast } from "react-toastify";
 import { tryCatchWrapper } from "@/utils/async";
 import { SherpaUserCreate } from "@/lib/pb/db-types";
 import { Loader } from "lucide-react";
+import { PbTheTextInput } from "@/lib/pb/components/form/PbTheTextInput";
 
 interface SignupFormProps {
 
@@ -22,19 +22,19 @@ export function SignUpForm({ }: SignupFormProps) {
   const page_ctx = usePageContext();
   const qc = useQueryClient();
 
-  const { handleChange, input, setError, setInput, validateInputs } =
+  const { handleChange, input, error, setError, setInput, validateInputs } =
     useFormHook<TSignupformSchema & Partial<SherpaUserCreate>>({
       initialValues: {
-        password: "",
-        username: "",
-        passwordConfirm: "",
-        email: "",
+        email: "gorillasarebuffdogs@gmail.com",
+        username: "bugu buuf",
+        password: "pass word",
+        passwordConfirm: "pass word",
       },
     });
   const mutation = useMutation({
     mutationFn: (vars:typeof input) => {
       return tryCatchWrapper(
-        page_ctx.locals.pb?.collection("sherpa_user").create(input),
+        page_ctx.locals.pb?.collection("sherpa_user").create(input)
       );
     },
     onError(error: any) {
@@ -54,9 +54,23 @@ export function SignUpForm({ }: SignupFormProps) {
     },
   });
 
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+      const is_valid = validateInputs((ipt) => {
+        if (ipt.password !== ipt.passwordConfirm) {
+          setError({
+            name: "passwordConfirm",
+            message: "passwords do not match",
+          });
+          return false;
+        }
+        return true;
+      });
     e.preventDefault();
-    mutation.mutate(input);
+    if(is_valid){
+      mutation.mutate(input);
+    }
+    // mutation.mutate(input);
   }
   return (
     <div className="w-full min-h-screen h-full flex flex-col items-center justify-center p-5 gap-5">
@@ -68,24 +82,26 @@ export function SignUpForm({ }: SignupFormProps) {
             onSubmit={handleSubmit}
           >
             <h1 className="text-2xl font-bold">Sign Up</h1>
-
-            <TheTextInput
+            <PbTheTextInput
               field_key={"email"}
               field_name="Email"
               required
               val={input.email}
               onChange={handleChange}
+              error={error}
+              pb_error={mutation.data?.error}
             />
-            <TheTextInput
+            <PbTheTextInput
               field_key={"username"}
               field_name="Useranme"
               required
               min={4}
               val={input.username}
               onChange={handleChange}
+              error={error}
+              pb_error={mutation.data?.error}
             />
-
-            <TheTextInput
+            <PbTheTextInput
               field_key={"password"}
               field_name="password"
               type={show ? "text" : "password"}
@@ -93,9 +109,10 @@ export function SignUpForm({ }: SignupFormProps) {
               min={8}
               onChange={handleChange}
               val={input.password}
+              error={error}
+              pb_error={mutation.data?.error}
             />
-
-            <TheTextInput
+            <PbTheTextInput
               field_key={"passwordConfirm"}
               field_name="passwordConfirm"
               type={show ? "text" : "password"}
@@ -103,7 +120,10 @@ export function SignUpForm({ }: SignupFormProps) {
               min={8}
               onChange={handleChange}
               val={input.passwordConfirm}
+              error={error}
+              pb_error={mutation.data?.error}
             />
+
             <TheTextInput
               field_key={"show"}
               field_name={"show password"}
@@ -126,6 +146,13 @@ export function SignUpForm({ }: SignupFormProps) {
               {mutation.isPending && <Loader className="animate-spin" />}
             </Button>
           </form>
+        )}
+        {mutation.data?.error && (
+          <div className="w-full flex justify-center">
+            <p className="bg-error-content text-error text-sm p-2 rounded-e-lg ">
+              {mutation.data.error?.message}
+            </p>
+          </div>
         )}
         {show_form && (
           <div className="w-full flex items-center justify-center">
