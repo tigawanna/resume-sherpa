@@ -10,7 +10,8 @@ import { toast } from "react-toastify";
 import { tryCatchWrapper } from "@/utils/async";
 import { SherpaUserCreate } from "@/lib/pb/db-types";
 import { Loader } from "lucide-react";
-import { PbTheTextInput } from "@/lib/pb/components/form/PbTheTextInput";
+import { PbTheTextInput } from "@/lib/pb/components/form/PBTheTextInput";
+
 
 interface SignupFormProps {
 
@@ -25,10 +26,10 @@ export function SignUpForm({ }: SignupFormProps) {
   const { handleChange, input, error, setError, setInput, validateInputs } =
     useFormHook<TSignupformSchema & Partial<SherpaUserCreate>>({
       initialValues: {
-        email: "gorillasarebuffdogs@gmail.com",
-        username: "bugu buuf",
-        password: "pass word",
-        passwordConfirm: "pass word",
+        email: "",
+        username: "",
+        password: "",
+        passwordConfirm:"",
       },
     });
   const mutation = useMutation({
