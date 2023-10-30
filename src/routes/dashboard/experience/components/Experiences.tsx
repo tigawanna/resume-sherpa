@@ -1,12 +1,6 @@
-import { ReturnedUseQueryEror } from "@/components/error/ReturnedUseQueryEror";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
-import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { experienceApi } from "@/routes/api/helpers/prisma/experience";
-import { hackathonApi } from "@/routes/api/helpers/prisma/hackathon";
-import { useDebouncedValue } from "@/utils/hooks/debounce";
 import { Plus } from "lucide-react";
-import { Link, navigate, usePageContext, useQueryClient, useSSQ } from "rakkasjs";
-import { Suspense, useState } from "react";
+import { Link, navigate, usePageContext } from "rakkasjs";
 import { ExperienceCard } from "./ExperienceCard";
 import { useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
@@ -26,7 +20,7 @@ export function Experience({}: ExperienceProps) {
     queryKey: ["sherpa_experience", debouncedValue, page_number],
 
     queryFn: async () => {
-      // console.log("page arams  ====== ",pageParam)
+     
       return tryCatchWrapper(
         page_ctx.locals.pb
           ?.collection("sherpa_experience")
