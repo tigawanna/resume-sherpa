@@ -1,6 +1,4 @@
-import { ReturnedUseQueryEror } from "@/components/error/ReturnedUseQueryEror";
-import { hackathonApi } from "@/routes/api/helpers/prisma/hackathon";
-import { PageProps, usePageContext, useQueryClient, useSSQ } from "rakkasjs";
+import { PageProps, usePageContext} from "rakkasjs";
 import { HackathonForm } from "./components/HackathonForm";
 import { useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
