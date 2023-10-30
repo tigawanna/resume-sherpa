@@ -4,7 +4,7 @@ import { useDebouncedValue } from "@/utils/hooks/debounce";
 import { useQuery, useSSM } from "rakkasjs";
 import { githubApi } from "@/routes/api/helpers/github/github";
 import { RepositoryResponse } from "@/routes/api/helpers/github/types";
-import { SherpaProjectsResponse } from "@/lib/pb/db-types";
+import { SherpaProjectsCreate, SherpaProjectsResponse } from "@/lib/pb/db-types";
 
 
 
@@ -12,10 +12,10 @@ interface SearchGithubprojectsProps {
   github_username: string;
   keyword: string;
   modal_id: string;
-  project: SherpaProjectsResponse;
-  setProject: React.Dispatch<React.SetStateAction<SherpaProjectsResponse>>;
+  project: SherpaProjectsCreate;
+  setProject: React.Dispatch<React.SetStateAction<SherpaProjectsCreate>>;
   direct_create?: boolean;
-  addProjectTList?: (project: SherpaProjectsResponse) => void;
+  addProjectTList?: (project: SherpaProjectsCreate) => void;
 }
 
 export function SearchGithubprojects({

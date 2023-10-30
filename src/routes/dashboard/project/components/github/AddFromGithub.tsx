@@ -2,15 +2,15 @@ import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { TheFormModal } from "@/components/modal/TheFormModal";
 import { GithubIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-;import { SherpaProjectsResponse, SherpaUserResponse } from "@/lib/pb/db-types";
+;import { SherpaProjectsCreate, SherpaProjectsResponse, SherpaUserResponse } from "@/lib/pb/db-types";
 import { SkeletonLoader } from "@/components/navigation/loaders/SkeletonLoader";
 import { SearchGithubprojects } from "./SearchGithubprojects";
 
 
 interface AddFromGithubProps {
 modal_id: string;
-project: SherpaProjectsResponse;
-setProject: React.Dispatch<React.SetStateAction<SherpaProjectsResponse>>;
+project: SherpaProjectsCreate;
+setProject: React.Dispatch<React.SetStateAction<SherpaProjectsCreate>>;
 profile:SherpaUserResponse
 }
 
@@ -43,8 +43,8 @@ return (
     <Suspense fallback={<SkeletonLoader items={9}/>}>
     <SearchGithubprojects
       project={project}
-      github_username={profile?.github_username ?? ""}
       setProject={setProject}
+      github_username={profile?.github_username ?? ""}
       modal_id={modal_id}
       keyword={keyword}
     />

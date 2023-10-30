@@ -1,24 +1,22 @@
 import { Check, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { TProjectInputType, projectApi} from "@/routes/api/helpers/prisma/projects";
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { TheTextAreaInput } from "@/components/form/inputs/TheTextArea";
-import { TheListInput } from "@/components/form/inputs/ListInput";
 import { usePageContext, useSSM } from "rakkasjs";
-import { SherpaProjectsCreate, SherpaProjectsResponse } from "@/lib/pb/db-types";
+import { SherpaProjectsCreate } from "@/lib/pb/db-types";
 import { useMutation } from "@tanstack/react-query";
 import { tryCatchWrapper } from "@/utils/async";
 import { TheStringListInput } from "@/components/form/inputs/StringListInput";
 
 
 interface GithubGeneratedProjectFormProps {
-  generated_project: SherpaProjectsResponse;
+  generated_project: SherpaProjectsCreate;
   direct_create?: boolean;
-  addProjectTList?: (project: SherpaProjectsResponse) => void;
+  addProjectTList?: (project: SherpaProjectsCreate) => void;
   setProjectToGenerate: React.Dispatch<React.SetStateAction<string>>;
-  project: SherpaProjectsResponse;
-  setProject: React.Dispatch<React.SetStateAction<SherpaProjectsResponse>>;
+  project: SherpaProjectsCreate;
+  setProject: React.Dispatch<React.SetStateAction<SherpaProjectsCreate>>;
   modal_id: string;
 }
 
@@ -37,7 +35,7 @@ export function GithubGeneratedProjectForm({
 
   // const create_mutation = useSSM<
   //   Awaited<ReturnType<typeof projectApi.addNew>>,
-  //   SherpaProjectsResponse
+  //   SherpaProjectsCreate
   // >(async (ctx, vars) => {
   //   return await projectApi.addNew({ input: vars });
   // });
