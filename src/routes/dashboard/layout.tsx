@@ -1,10 +1,8 @@
 import { ClientSuspense, LayoutProps } from "rakkasjs";
 import { DashboardSidebar } from "./components/LayoutDrawer";
 import { DashBoardLinks } from "./components/DashBoardLinks";
-
-
 import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { useUser } from "@/utils/hooks/tanstack-query/useUser";
+
 export default function DashboardLayout({ children,url }: LayoutProps) {
   // const user =useUser();
   return (

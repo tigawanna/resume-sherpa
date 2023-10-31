@@ -6,6 +6,9 @@ import { handleJobApplicationSubmit } from './helpers/submit';
 import { SherpaJobApplicationCreate, SherpaJobApplicationResponse, SherpaJobApplicationUpdate } from '@/lib/pb/db-types';
 import { useMutation, useQuery} from '@tanstack/react-query';
 import { useUser } from '@/utils/hooks/tanstack-query/useUser';
+import { CoverLetterForm } from './cover-letter/CoverLetterForm';
+import { ResumeForm } from './resume/ResumeForm';
+import { ResumeMultiStepForm } from './resume/steps/ResumeMutiStepForm';
 
 
 
@@ -50,8 +53,10 @@ export function MainJobApplicationForm({
  
 
     const { handleChange, input, setError, setInput, validateInputs } =
-        useFormHook<Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">>({
+        useFormHook<SherpaJobApplicationResponse>({
             initialValues: {
+              // @ts-expect-error
+                id: default_value?.id ?? undefined,
                 user: default_value?.user?? user?.data?.id!,
                 resume: default_value?.resume ?? undefined,
                 title: default_value?.title ?? '',
@@ -103,6 +108,7 @@ export function MainJobApplicationForm({
                 isLoading={
                   create_mutation.isPending || update_mutation.isPending
                 }
+                // @ts-expect-error
                 setInput={setInput}
                 handleSubmit={(e) =>
                   handleJobApplicationSubmit({
@@ -118,39 +124,39 @@ export function MainJobApplicationForm({
             </div>
           ),
         },
-        // {
-        //   title: 'Resume',
-        //   component: (
-        //     <>
-        //       {resume_input ? (
-        //         <ResumeForm
-        //           resume_input={resume_input}
-        //           application_input={input}
-        //           setResume={setResume}
-        //           updating={updating}
-        //         />
-        //       ) : (
-        //         <ResumeMultiStepForm
-        //           setResume={setResume}
-        //           application_input={input}
+        {
+          title: 'Resume',
+          component: (
+            <>
+              {resume_input ? (
+                <ResumeForm
+                  resume_input={resume_input}
+                  application_input={input}
+                  setResume={setResume}
+                  updating={updating}
+                />
+              ) : (
+                <ResumeMultiStepForm
+                  setResume={setResume}
+                  application_input={input}
                  
-        //         />
-        //       )}
-        //     </>
-        //   ),
-        // },
-        // {
-        //   title: 'Cover Letter',
-        //   component: (
-        //     <>
-        //       <CoverLetterForm
-        //         application_input={input}
-        //         setCoverLetter={setCoverLetter}
-        //         updating={updating}
-        //       />
-        //     </>
-        //   ),
-        // },
+                />
+              )}
+            </>
+          ),
+        },
+        {
+          title: 'Cover Letter',
+          component: (
+            <>
+              <CoverLetterForm
+                application_input={input}
+                setCoverLetter={setCoverLetter}
+                updating={updating}
+              />
+            </>
+          ),
+        },
       ]);
 
 

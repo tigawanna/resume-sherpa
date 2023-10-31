@@ -2,8 +2,9 @@ import { Toolbar } from "@/components/navigation/Toolbar";
 import { Nprogress } from "@/components/navigation/nprogress/Nprogress";
 import { ClientSuspense, LayoutProps, PageContext, useLocation } from "rakkasjs";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
+import "cherry-markdown/dist/cherry-markdown.css";
+import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 
 function Layout({ children }: LayoutProps) {
