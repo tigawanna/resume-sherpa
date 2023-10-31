@@ -1,17 +1,15 @@
 import { Spinner } from '@/components/navigation/loaders/Spinner';
-import { TJobApplicationInputType } from '@/routes/api/helpers/prisma/job-application';
-import { TResumeInputType } from '@/routes/api/helpers/prisma/resume';
 import Cherry from 'cherry-markdown';
 import { ClientSuspense} from 'rakkasjs';
 import { lazy } from 'react';
 import { ResumeEditorControls } from './ResumeEditorControls';
-import { SherpaJobApplicationResponse } from '@/lib/pb/db-types';
+import { SherpaJobApplicationResponse, SherpaResumeResponse } from '@/lib/pb/db-types';
 
 interface ResumeEditorProps {
   html_string?: string;
   setResume: (resume: string) => void;
-  resume_input?: TResumeInputType;
-  application_input: Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">;
+  resume_input?:SherpaResumeResponse;
+  application_input: SherpaJobApplicationResponse;
   updating?: boolean;
 }
 

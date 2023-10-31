@@ -1,4 +1,5 @@
 
+import { ApiRouteResponse } from "@/lib/rakkas/utils/types";
 import { ClientResponseError } from "pocketbase";
 import { PageContext } from "rakkasjs";
 import { toast } from "react-toastify";
@@ -52,8 +53,8 @@ export async function useQueryFetcher(ctx:PageContext,pathname:string,params:Rec
   }
 }
 
-export async function useMutationFetcher(ctx:PageContext,pathname:string,body:Record<string,any>,
-  method:"POST"|"PUT"|"DELETE")
+export async function useMutationFetcher<T=any>(ctx:PageContext,pathname:string,body:Record<string,any>,
+  method:"POST"|"PUT"|"DELETE"):Promise<T>
 {
   try {
   const api_url = new URL(ctx.url.origin)
@@ -90,6 +91,14 @@ export function narrowOutError<T = unknown>(data?:DataOrError<T>) {
 
 
 export async function tryCatchWrapper<T>(fn:Promise<T>): Promise<{ data: T | null; error: ClientResponseError | null }> {
+  try {
+    const data = await fn
+    return { data, error: null };
+  } catch (error: any) {
+    return { data: null, error };
+  }
+}
+export async function apiRouteTryCatchWrapper<T>(fn:Promise<T>): Promise<ApiRouteResponse<T>> {
   try {
     const data = await fn
     return { data, error: null };

@@ -1,31 +1,30 @@
 import { Spinner } from '@/components/navigation/loaders/Spinner';
-import { SherpaJobApplicationResponse } from '@/lib/pb/db-types';
-import { TJobApplicationInputType,jobApplicationApi,} from '@/routes/api/helpers/prisma/job-application';
-import { TResumeInputType, resumeApi} from '@/routes/api/helpers/prisma/resume';
-import { useMutationFetcher } from '@/utils/async';
+import { SherpaJobApplicationResponse, SherpaJobApplicationUpdate, SherpaResumeCreate, SherpaResumeResponse, SherpaResumeUpdate } from '@/lib/pb/db-types';
+import { ApiRouteResponse } from '@/lib/rakkas/utils/types';
+import { apiRouteTryCatchWrapper, tryCatchWrapper, useMutationFetcher } from '@/utils/async';
+import { useUser } from '@/utils/hooks/tanstack-query/useUser';
+import { useMutation } from '@tanstack/react-query';
 import Cherry from 'cherry-markdown';
 import { Save } from 'lucide-react';
-import { useMutation, usePageContext } from 'rakkasjs';
 import { toast } from 'react-toastify';
 
 interface ResumeEditorControlsProps {
   cherry: Cherry | null;
   setResume: (resume: string) => void;
-  resume_input?: TResumeInputType;
-  application_input: Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">;
+  resume_input?: SherpaResumeResponse
+  application_input: SherpaJobApplicationResponse;
   updating?: boolean;
 }
 
 export interface AiGeneratorInput {
-  user_id: string;
   job: string;
   resume: string;
 }
-export interface AiGeneratorResponse {
+export interface AiGeneratorData {
   output: string;
   original_response: any;
 }
-export type AiResumeResponse = AiGeneratorResponse | ReturnedError;
+export type AiResumeResponse = ApiRouteResponse<AiGeneratorData>;
 
 export function ResumeEditorControls({
   cherry,
@@ -34,60 +33,34 @@ export function ResumeEditorControls({
   resume_input,
   updating,
 }: ResumeEditorControlsProps) {
-  const page_ctx = usePageContext();
-  const qc = page_ctx.queryClient;
-  const { userId } = qc.getQueryData('user') as LuciaUser;
+const {user_query,page_ctx} = useUser()
+  const user = user_query?.data
+const ai_resume_mutation = useMutation({
+  mutationFn: (vars: AiGeneratorInput) => {
+    return apiRouteTryCatchWrapper(useMutationFetcher<AiResumeResponse>(page_ctx, "/api/ai/resume", vars, "POST"))
+  },
+});
 
-  const ai_resume_mutation = useMutation<AiResumeResponse, AiGeneratorInput>(
-    (vars) => {
-      // return resumeApi.addNew({ input: vars });
-      return useMutationFetcher(
-        page_ctx,
-        '/api/ai/resume',
-        { input: vars, user_id: userId! },
-        'POST',
+
+  const create_mutation = useMutation({mutationFn:(vars:SherpaResumeCreate) => {
+    return tryCatchWrapper(page_ctx.locals.pb?.collection("sherpa_resume").create(vars));
+  }});
+
+  const update_mutation = useMutation({
+    mutationFn:(vars:{id:string,data:SherpaResumeUpdate}) => {
+    return tryCatchWrapper(page_ctx.locals.pb?.collection("sherpa_resume").update(vars.id,vars.data));
+  }
+});
+  const update_job_application_mutation = useMutation({
+    mutationFn: (vars: { id: string; data: SherpaJobApplicationUpdate }) => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb
+          ?.collection("sherpa_job_application")
+          .update(vars.id, vars.data),
       );
     },
-  );
-
-  const create_mutation = useMutation<
-    Awaited<ReturnType<typeof resumeApi.addNew>>,
-    TResumeInputType
-  >((vars) => {
-    // return resumeApi.addNew({ input: vars });
-    return useMutationFetcher(
-      page_ctx,
-      '/api/resume',
-      { input: vars, user_id: userId! },
-      'POST',
-    );
   });
 
-  const update_mutation = useMutation<
-    Awaited<ReturnType<typeof resumeApi.updateOne>>,
-    TResumeInputType & { id: string }
-  >((vars) => {
-    // resumeApi.updateOne({ input: vars, user_id: userId! });
-    return useMutationFetcher(
-      page_ctx,
-      '/api/resume',
-      { input: vars, user_id: userId! },
-      'PUT',
-    );
-  });
-
-  const update_job_application_mutation = useMutation<
-    Awaited<ReturnType<typeof jobApplicationApi.updateOne>>,
-    Partial<TJobApplicationInputType> & { id: string }
-  >((vars) => {
-    // return jobApplicationApi.updateOne({ input: vars, user_id: userId! });
-    return useMutationFetcher(
-      page_ctx,
-      '/api/job',
-      { input: vars, user_id: userId! },
-      'PUT',
-    );
-  });
 
   function aiGenerateresume() {
     const resume = cherry?.getMarkdown();
@@ -96,26 +69,28 @@ export function ResumeEditorControls({
     }
     const input = {
       job: application_input.description,
-      resume,
-      user_id: userId!,
+      resume
     };
     // console.log('input  ==== ', input);
     // return
     ai_resume_mutation
       .mutateAsync(input)
       .then((res) => {
+        if(res.data){
+        cherry?.setMarkdown(res.data?.data?.output??"");
+        toast(`AI Resume generated`, {
+          type: "success",
+        });
+        }
         //    if mutaio errored
-        if (res && 'error' in res) {
-          toast(`Generating Resume  failed : ${res.error.message}`, {
+        if (res.error) {
+          toast(`Generating Resume  failed : ${res?.error?.message}`, {
             type: 'error',
           });
           return;
         }
         // succefull response
-        cherry?.setMarkdown(res?.output);
-        toast(`AI Resume generated`, {
-          type: 'success',
-        });
+
       })
       .catch((error: any) => {
         toast(`Generating Resume  failed : ${error.message}`, { type: 'error' });
@@ -129,55 +104,63 @@ export function ResumeEditorControls({
     if (updating) {
       update_mutation.mutateAsync({
         id: resume_input?.id!,
-        body: markdown,
-        userId: userId!,
-        jobAplicationId: application_input.id,
+        data:{
+          body: markdown,
+          user: user?.id!,
+          job_application:application_input.id!,
+          }
       });
     }
     create_mutation
       .mutateAsync({
-        body: markdown,
-        userId: userId!,
-        jobAplicationId: application_input.id,
+
+          body: markdown,
+          user: user?.id!,
+          job_application: application_input.id!,
+        
       })
       .then((res) => {
-        if (res && !('error' in res)) {
-          if (res?.id) {
+        if (res?.data) {
+          if (res?.data.id) {
             update_job_application_mutation
-              .mutateAsync({
-                id: application_input?.id ?? '',
-                resume: res.body,
-                resumeId: res?.id,
+            .mutateAsync({
+                id: application_input?.id ?? "",
+                data:{
+                  resume: res.data.body
+                }
               })
               .then((res) => {
-                if (res && 'error' in res) {
+                if (res.error) {
                   toast(`Adding Resume to Job application failed`, {
-                    type: 'error',
+                    type: "error",
                   });
                   return;
                 }
-                toast(
-                  `Resume added to Job application ${res.id} successfully`,
-                  {
-                    type: 'success',
-                  },
-                );
+                if(res.data){
+                  toast(
+                    `Resume added to Job application ${res?.data?.id} successfully`,
+                    {
+                      type: "success",
+                    },
+                  );
+                }
+
               });
           }
         }
-        if (res && 'error' in res) {
-          return toast(`Creating Resume  failed`, { type: 'error' });
+        if (res.error) {
+          return toast(`Creating Resume  failed`, { type: "error" });
         }
       })
       .catch((error) => {
-        toast(`Creating Resume  failed`, { type: 'error' });
+        toast(`Creating Resume  failed`, { type: "error" });
       });
   }
 
   const is_saving =
-    create_mutation.isLoading ||
-    update_job_application_mutation.isLoading ||
-    update_mutation.isLoading;
+    create_mutation.isPending ||
+    update_job_application_mutation.isPending ||
+    update_mutation.isPending;
   return (
     <div className="w-full flex gap-1">
       
@@ -204,7 +187,7 @@ export function ResumeEditorControls({
           aiGenerateresume();
         }}
       >
-        {ai_resume_mutation.isLoading ? <Spinner size="40px" /> : 'AI generate'}
+        {ai_resume_mutation.isPending ? <Spinner size="40px" /> : 'AI generate'}
       </button>
     </div>
   );

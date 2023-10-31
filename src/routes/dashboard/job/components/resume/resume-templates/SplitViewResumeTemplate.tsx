@@ -1,13 +1,11 @@
 import { ResumeFields } from "../steps/ResumeMutiStepForm";
 
-
-
 interface SplitViewResumeTemplateProps {
   resume_fields: ResumeFields;
 }
 
 export function SplitViewResumeTemplate({resume_fields}:SplitViewResumeTemplateProps){
-  function getMonthAndYear(date: Date) {
+  function getMonthAndYear(date: Date|string) {
     return new Date(date)?.toLocaleDateString();
   }
 return (

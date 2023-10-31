@@ -5,7 +5,7 @@ import { SherpaJobApplicationResponse } from '@/lib/pb/db-types';
 interface FinalResumeProps {
 
   resume_fields: ResumeFields;
-  application_input: Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">;
+  application_input: SherpaJobApplicationResponse;
   setResume: (resume: string) => void;
   handleChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

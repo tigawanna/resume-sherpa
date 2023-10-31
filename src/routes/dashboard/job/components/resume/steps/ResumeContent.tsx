@@ -1,17 +1,13 @@
-import { ReturnedUseQueryEror } from '@/components/error/ReturnedUseQueryEror';
 import { TheTextInput } from '@/components/form/inputs/TheTextInput';
-import { Spinner } from '@/components/navigation/loaders/Spinner';
-import {
-  TContentInputType,
-  contentApi,
-} from '@/routes/api/helpers/prisma/content';
-import { useQueryFetcher } from '@/utils/async';
+import { tryCatchWrapper} from '@/utils/async';
 import { useDebouncedValue } from '@/utils/hooks/debounce';
 import { Plus, X } from 'lucide-react';
-import { Link, useQuery, useSSQ } from 'rakkasjs';
-import { Suspense, useState } from 'react';
-
+import { Link, usePageContext } from 'rakkasjs';
+import {  useState } from 'react';
 import { ResumeFields } from './ResumeMutiStepForm';
+import { useQuery } from '@tanstack/react-query';
+import { SherpaContentResponse } from '@/lib/pb/db-types';
+import { PBReturnedUseQueryError } from '@/components/error/PBReturnedUseQueryEror';
 
 interface ResumeContentProps {
   user_id: string;
@@ -26,23 +22,29 @@ export function ResumeContent({
   input,
   setInput,
 }: ResumeContentProps) {
+const page_ctx =usePageContext()
   const [keyword, setKeyword] = useState('');
   const { debouncedValue, isDebouncing } = useDebouncedValue(keyword, 2000);
 
-  const query = useQuery<Awaited<ReturnType<typeof contentApi.findByName>>>(
-    'content' + debouncedValue,
-    (ctx) => {
-      return useQueryFetcher(ctx, '/api/content', {
-        user_id,
-        keyword: debouncedValue,
-      });
+  const query = useQuery({
+    queryKey: ['content', debouncedValue],
+    queryFn: async () => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb
+          ?.collection('sherpa_content')
+          .getList(1, 12, {
+            sort: '-created',
+            filter: `title~"${debouncedValue}"`,
+          }),
+      );
     },
-    { refetchOnWindowFocus: true, refetchOnMount: true },
+    refetchOnWindowFocus: true, refetchOnMount: true,
+  },
+
+
   );
 
-  if (query.error || (query.data && 'error' in query.data)) {
-    return <ReturnedUseQueryEror data={query.data} error={query.error} />;
-  }
+
 
   function handleChange(e: any) {
     setKeyword(e.target.value);
@@ -51,7 +53,8 @@ export function ResumeContent({
   const isSelected = (id?: string) =>
     id && input.content.some((val) => val.id === id);
 
-  const handleAddItem = ({ id, title, type }: TContentInputType) => {
+  const handleAddItem = ({ id, title, type }: SherpaContentResponse) => {
+    // @ts-expect-error
     setInput((prev) => {
       if (
         prev.content.some((val) => {
@@ -74,16 +77,18 @@ export function ResumeContent({
     });
   };
 
-  const data = query.data;
+  const error = query?.data?.error;
+  const data = query?.data?.data?.items;
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       {/* header + search bar + add new link */}
       <div className="sticky top-[5%] flex w-full flex-wrap items-center justify-evenly gap-3 p-2">
+        <h3 className="text-2xl font-bold hidden sm:flex">Content</h3>
         <div className=" relative flex min-w-[70%] items-center  justify-center gap-1 md:min-w-[50%]">
           <TheTextInput
             label_classname="hidden"
             value={keyword}
-            field_key={'keyword'}
+            field_key={"keyword"}
             placeholder="Search"
             field_name="Search"
             onChange={handleChange}
@@ -94,20 +99,29 @@ export function ResumeContent({
             </div>
           )}
         </div>
-        <Link href={`/dashboard/content/new`} className="btn btn-outline">
+        <Link
+          href={`/dashboard/content/new`}
+          className="btn btn-outline  h-auto"
+        >
           <Plus className="h-6 w-6" />
         </Link>
       </div>
 
-      {!data && (
+      {(!data || (data && data?.length === 0)) && !error && (
         <div className="flex h-full  w-full items-center justify-center p-2">
           <div className="rounded-lg border p-2 text-info">
             no matches found
           </div>
         </div>
       )}
+
+      {error && (
+        <div className="flex h-full  w-full items-center justify-center p-2">
+          <PBReturnedUseQueryError error={error} />
+        </div>
+      )}
       {/* contents */}
-      <Suspense fallback={<Spinner size="100px" />}>
+
         <div className="flex w-full flex-wrap items-center justify-center gap-2">
           {data &&
             data.map((item) => {
@@ -115,7 +129,7 @@ export function ResumeContent({
                 <div
                   key={item.id}
                   className="flex w-full flex-col justify-center gap-1 rounded-md border 
-          p-2 hover:border-accent sm:w-[45%] lg:w-[30%] "
+                p-2 hover:border-accent sm:w-[45%] lg:w-[30%] "
                 >
                   <div className=" flex w-full items-center justify-end">
                     {isSelected(item.id) ? (
@@ -136,7 +150,7 @@ export function ResumeContent({
               );
             })}
         </div>
-      </Suspense>
+     
     </div>
   );
 }

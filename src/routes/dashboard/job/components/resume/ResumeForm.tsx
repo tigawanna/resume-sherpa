@@ -1,14 +1,13 @@
-import { TResumeInputType } from '@/routes/api/helpers/prisma/resume';
 import ReactDOMServer from 'react-dom/server';
 import { ResumeEditor } from './editor/ResumeEditor';
 import { SingleViewResumeTemplate } from './resume-templates/SingleViewResumeTemplate';
 import { ResumeFields } from './steps/ResumeMutiStepForm';
-import { SherpaJobApplicationResponse } from '@/lib/pb/db-types';
+import { SherpaJobApplicationResponse, SherpaResumeResponse } from '@/lib/pb/db-types';
 
 interface ResumeFormProps {
   resume_fields?: ResumeFields;
-  resume_input?: TResumeInputType;
-  application_input: Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">;
+  resume_input?: SherpaResumeResponse;
+  application_input:SherpaJobApplicationResponse;
   updating?: boolean;
   setResume: (resume: string) => void;
 }
