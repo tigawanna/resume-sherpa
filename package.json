@@ -36,6 +36,7 @@
   "dependencies": {
     "@google-ai/generativelanguage": "^1.1.0",
     "@hattip/cookie": "^0.0.35",
+    "@hattip/response": "^0.0.35",
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",

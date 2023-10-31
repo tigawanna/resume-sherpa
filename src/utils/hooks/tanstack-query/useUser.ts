@@ -1,3 +1,4 @@
+import { pb } from "@/lib/pb/client";
 import { SherpaUserResponse } from "@/lib/pb/db-types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePageContext } from "rakkasjs";
@@ -8,7 +9,8 @@ export function useUser(){
     const locals  = page_ctx.locals
     const mutation = useMutation({
         mutationFn: async() => {
-            return locals.pb?.authStore.clear();
+            locals.pb?.authStore.clear();
+            document.cookie = locals.pb?.authStore.exportToCookie({ httpOnly: false }); 
         },
         onSuccess:()=>{
             qc.invalidateQueries({ queryKey: ['sherpa_user'] })

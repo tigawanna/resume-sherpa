@@ -11,6 +11,9 @@ dependencies:
   '@hattip/cookie':
     specifier: ^0.0.35
     version: 0.0.35
+  '@hattip/response':
+    specifier: ^0.0.35
+    version: 0.0.35
   '@hookform/resolvers':
     specifier: ^3.3.2
     version: 3.3.2(react-hook-form@7.47.0)
@@ -991,6 +994,12 @@ packages:
       '@whatwg-node/fetch': 0.9.14
       node-fetch-native: 1.4.0
     dev: true
+
+  /@hattip/response@0.0.35:
+    resolution: {integrity: sha512-09NdREWhYeZPgxUQeiw5NXONPxgwKO5v9LMSmnDdtV+Sd8JgSNzuoRSqwyWgRkua9z+9q5apzbWqJbXABVgI0Q==}
+    dependencies:
+      '@hattip/core': 0.0.35
+    dev: false
 
   /@hattip/walk@0.0.35:
     resolution: {integrity: sha512-11pQw9qtGU/iqWV7UdKKRW6yKS+sFXHgdNmSrBJ57YsgrwV5Kl+N38goKMjxGFVDUbXEZOxEZNTXZbVso0WSdg==}

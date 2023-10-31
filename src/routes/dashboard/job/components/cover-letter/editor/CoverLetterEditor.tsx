@@ -1,9 +1,9 @@
 import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { TJobApplicationInputType } from "@/routes/api/helpers/prisma/job-application";
 import { ClientSuspense } from "rakkasjs";
 import { lazy } from "react";
 import Cherry from "cherry-markdown";
 import { CoverLetterEditorControls } from "./CoverLetterEditorControls";
+import { SherpaJobApplicationResponse } from "@/lib/pb/db-types";
 
 const CherryMarkdownEditor = lazy(
   () => import('@/components/editor/CherryMarkdownEditor'),
@@ -11,7 +11,7 @@ const CherryMarkdownEditor = lazy(
 
 interface CoverLetterEditorProps {
   setCoverLetter: (letter: string) => void;
-  application_input: TJobApplicationInputType;
+  application_input: SherpaJobApplicationResponse;
   updating?: boolean;
 }
 

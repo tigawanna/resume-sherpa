@@ -54,7 +54,12 @@ startClient({
           ctx.locals.pb = new PocketBase(
             import.meta.env.RAKKAS_PB_URL,
           ) as TypedPocketBase<Schema>;
-          const model = ctx.locals.pb.authStore.model
+          ctx.locals.pb?.authStore.onChange(() => {
+            ctx.requestContext?.setCookie?.(
+              "set-cookie",
+              ctx.locals.pb?.authStore.exportToCookie(),
+            );
+          });
       }
 
     },

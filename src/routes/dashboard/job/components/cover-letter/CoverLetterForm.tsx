@@ -1,13 +1,13 @@
-import { TJobApplicationInputType } from "@/routes/api/helpers/prisma/job-application";
 import { useEffect } from "react";
 import { CoverLetterEditor } from "./editor/CoverLetterEditor";
+import { SherpaJobApplicationResponse } from "@/lib/pb/db-types";
 
 
 
 
 interface CoverLetterFormProps {
   setCoverLetter: (letter: string) => void;
-  application_input: TJobApplicationInputType;
+  application_input:SherpaJobApplicationResponse;
   updating?: boolean;
 }
 

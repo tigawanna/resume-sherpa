@@ -1,5 +1,5 @@
 import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { TJobApplicationInputType, jobApplicationApi } from "@/routes/api/helpers/prisma/job-application";
+import { SherpaJobApplicationResponse } from "@/lib/pb/db-types";
 import { useMutationFetcher } from "@/utils/async";
 import Cherry from "cherry-markdown";
 import { Save } from "lucide-react";
@@ -9,9 +9,9 @@ import { toast } from "react-toastify";
 
 interface CoverLetterEditorControlsProps {
   setCoverLetter: (letter: string) => void;
-  application_input: TJobApplicationInputType;
+  application_input: SherpaJobApplicationResponse;
   updating?: boolean;
-  cherry:Cherry|null
+  cherry: Cherry | null;
 }
 
 export interface AiGeneratorInput {
