@@ -1,9 +1,12 @@
 import { Spinner } from "@/components/navigation/loaders/Spinner";
-import { SherpaJobApplicationResponse } from "@/lib/pb/db-types";
-import { useMutationFetcher } from "@/utils/async";
+import { SherpaJobApplicationResponse, SherpaJobApplicationUpdate } from "@/lib/pb/db-types";
+import { ApiRouteResponse } from "@/lib/rakkas/utils/types";
+import { apiRouteTryCatchWrapper, tryCatchWrapper, useMutationFetcher } from "@/utils/async";
+import { useUser } from "@/utils/hooks/tanstack-query/useUser";
+import { useMutation } from "@tanstack/react-query";
 import Cherry from "cherry-markdown";
 import { Save } from "lucide-react";
-import { useMutation, usePageContext } from "rakkasjs";
+import {  usePageContext } from "rakkasjs";
 import { toast } from "react-toastify";
 
 
@@ -15,7 +18,6 @@ interface CoverLetterEditorControlsProps {
 }
 
 export interface AiGeneratorInput {
-  user_id: string;
   job: string;
   resume: string;
 }
@@ -23,7 +25,7 @@ export interface AiGeneratorResponse {
   output: string;
   original_response: any;
 }
-export type AiResumeResponse = AiGeneratorResponse | ReturnedError;
+export type AiResumeResponse = ApiRouteResponse<AiGeneratorResponse>;
 
 export function CoverLetterEditorControls({
   cherry,
@@ -32,34 +34,31 @@ export function CoverLetterEditorControls({
   updating,
 }: CoverLetterEditorControlsProps) {
 
-  const page_ctx = usePageContext();
-  const qc = page_ctx.queryClient;
-  const { userId } = qc.getQueryData('user') as LuciaUser;
+const { user_query, page_ctx } = useUser();
+const user = user_query?.data;
 
-  const update_job_application_mutation = useMutation<
-    Awaited<ReturnType<typeof jobApplicationApi.updateOne>>,
-    Partial<TJobApplicationInputType> & { id: string }
-  >((vars) => {
-    // return jobApplicationApi.updateOne({ input: vars, user_id: userId! });
-    return useMutationFetcher(
-      page_ctx,
-      '/api/job',
-      { input: vars, user_id: userId! },
-      'PUT',
-    );
-  });
-
-  const ai_resume_mutation = useMutation<AiResumeResponse, AiGeneratorInput>(
-    (vars) => {
-      // return resumeApi.addNew({ input: vars });
-      return useMutationFetcher(
-        page_ctx,
-        '/api/ai/letter',
-        { input: vars, user_id: userId! },
-        'POST',
+  const update_job_application_mutation = useMutation({
+    mutationFn: (vars: { id: string; data: SherpaJobApplicationUpdate }) => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb
+          ?.collection("sherpa_job_application")
+          .update(vars.id, vars.data),
       );
     },
-  );
+  });
+
+  const ai_letter_mutation = useMutation({
+    mutationFn: (vars: AiGeneratorInput) => {
+      return apiRouteTryCatchWrapper(
+        useMutationFetcher<AiResumeResponse>(
+          page_ctx,
+          "/api/ai/letter",
+          vars,
+          "POST",
+        ),
+      )
+    },
+  });
 
   function saveCoverLetter() {
     const markdown = cherry?.getMarkdown();
@@ -67,20 +66,27 @@ export function CoverLetterEditorControls({
     cherry && setCoverLetter(markdown);
     update_job_application_mutation
       .mutateAsync({
+
         id: application_input?.id ?? '',
-        cover_letter: markdown,
-        userId: userId!,
+        data:{
+          cover_letter: markdown,
+          user:user?.id!,
+
+        }
       })
       .then((res) => {
-        if (res && 'error' in res) {
+        if (res.error) {
           toast(`Adding cover letter to Job application failed`, {
             type: 'error',
           });
           return;
         }
-        toast(`Cover letter added to Job application ${res.id} successfully`, {
-          type: 'success',
-        });
+        if(res.data){
+          toast(`Cover letter added to Job application ${res.data.id} successfully`, {
+            type: 'success',
+          });
+
+        }
       });
   }
 
@@ -91,26 +97,28 @@ export function CoverLetterEditorControls({
     }
     const input = {
       job: application_input.description,
-      resume,
-      user_id: userId!,
+      resume
     };
     // console.log('input  ==== ', input);
     // return
-    ai_resume_mutation
+    ai_letter_mutation
       .mutateAsync(input)
       .then((res) => {
         //    if mutaio errored
-        if (res && 'error' in res) {
-          toast(`Generatin Resume  failed : ${res.error.message}`, {
+        if (res.error) {
+          toast(`Generating cover letter  failed : ${res.error.message}`, {
             type: 'error',
           });
           return;
         }
-        // succefull response
-        cherry?.setMarkdown(res?.output);
-        toast(`AI Cover letter generated`, {
-          type: 'success',
-        });
+        if(res.data){
+          // succefull response
+          cherry?.setMarkdown(res?.data?.data?.output??"");
+          toast(`AI Cover letter generated`, {
+            type: 'success',
+          });
+
+        }
       })
       .catch((error: any) => {
         toast(`Generating Resume  failed : ${error.message}`, { type: 'error' });
@@ -129,7 +137,7 @@ export function CoverLetterEditorControls({
           saveCoverLetter();
         }}
       >
-        {update_job_application_mutation.isLoading ? (
+        {update_job_application_mutation.isPending ? (
           <Spinner size="30px" />
         ) : (
           <Save className="w-5 h-5" />
@@ -146,7 +154,7 @@ export function CoverLetterEditorControls({
             aiGenerateCoverLetter();
         }}
       >
-        {ai_resume_mutation.isLoading ? <Spinner size="40px" /> : 'AI generate'}
+        {ai_letter_mutation.isPending ? <Spinner size="40px" /> : 'AI generate'}
       </button>
     </div>
   );

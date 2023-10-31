@@ -1,11 +1,9 @@
 import { TheTextInput } from "@/components/form/inputs/TheTextInput";
-import { TProjectInputType, projectApi } from "@/routes/api/helpers/prisma/projects";
 import { useDebouncedValue } from "@/utils/hooks/debounce";
 import { Plus, X } from "lucide-react";
 import { Link, usePageContext } from "rakkasjs";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { ResumeFields } from "./ResumeMutiStepForm";
-import { Spinner } from "@/components/navigation/loaders/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { tryCatchWrapper } from "@/utils/async";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";

@@ -17,7 +17,7 @@ import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 
 interface MultiStepResumeFormProps {
     setResume(values: string): void;
-    application_input: Omit<SherpaJobApplicationResponse,"id"|"created"|"updated">;
+    application_input: SherpaJobApplicationResponse;
     
 }
 

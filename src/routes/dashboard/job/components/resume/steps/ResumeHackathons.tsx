@@ -4,7 +4,6 @@ import { Link, usePageContext } from "rakkasjs";
 import { ResumeFields } from "./ResumeMutiStepForm";
 import { useQuery } from "@tanstack/react-query";
 import { PBReturnedUseQueryError } from "@/components/error/PBReturnedUseQueryEror";
-import { THackathonInputType } from "@/routes/api/helpers/prisma/hackathon";
 import { tryCatchWrapper } from "@/utils/async";
 import { useSearchWithQuery } from "@/utils/hooks/search";
 import { SherpaHackathonResponse } from "@/lib/pb/db-types";
