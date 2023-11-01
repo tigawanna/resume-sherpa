@@ -52,10 +52,7 @@ const qc = useQueryClient()
     });
   }
 
-  console.log(
-    "======== ERROR ==== ",
-input
-  );
+
   return (
     <div className="w-full flex lg:flex-row flex-col  items-center sm:px-3 p-1 gap-2">
       <div className="h-full w-full lg:w-fit flex flex-wrap items-center justify-center gap-1 ">
