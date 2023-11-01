@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 interface ProfileImageProps {
   record_id: string;
   file_name?: string;
+  avatar_url?: string;
   editing: boolean;
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setInput: React.Dispatch<React.SetStateAction<SherpaUserUpdate>>;
@@ -15,6 +16,7 @@ interface ProfileImageProps {
 
 export function ProfileImage({
   file_name,
+  avatar_url,
   record_id,
   editing,
   setEditing,
@@ -22,7 +24,7 @@ export function ProfileImage({
 }: ProfileImageProps) {
   const pb_avatar_file_url = file_name
     ? getFileURL({ collection_id_or_name: "sherpa_user", file_name, record_id })
-    : "";
+    : avatar_url;
 
   const [pic, setPic] = useState(pb_avatar_file_url);
   const ref = useRef<HTMLInputElement>(null);

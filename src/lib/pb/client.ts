@@ -1,7 +1,7 @@
 import PocketBase, { OAuth2AuthConfig } from "pocketbase";
 import { GithubOauthResponse } from "./types";
 import { TypedPocketBase } from "typed-pocketbase";
-import { Schema, SherpaUserCreate } from "./db-types";
+import { Schema, SherpaUserCreate, SherpaUserResponse, SherpaUserUpdate } from "./db-types";
 import { tryCatchWrapper } from "@/utils/async";
 import { errorToClientResponseError } from "./utils";
 
@@ -47,14 +47,13 @@ export async function triggerOuathLogin(options: OAuth2AuthConfig) {
 export async function updateUser(authData: GithubOauthResponse) {
 
     const dev = authData.record;
-    const data = {
-      access_token: authData.meta?.accessToken,
-      github_login: authData.meta?.rawUser?.login,
-      avatar_url: authData.meta?.rawUser?.avatar_url,
+    const data:SherpaUserUpdate = {
+      github_access_token: authData.meta?.accessToken,
+      github_username: authData.meta?.rawUser?.login,
       username: authData.meta?.rawUser?.login,
-      bio: authData.meta?.rawUser?.bio,
-      emailVisibility: true,
-    };
+      avatar_url: authData.meta?.rawUser?.avatar_url,
+      about_me: authData.meta?.rawUser?.bio,
+      };
     const new_dev = await tryCatchWrapper(pb.collection("sherpa_user").update(dev.id, data));
     if (new_dev?.data) {
         document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
@@ -82,6 +81,35 @@ export async function oAuthLogin(provider: "github" | "google") {
   }
   return errorToClientResponseError({name: "Login Failed", message: "Oauth Login Failed",isAbort: false,});
 }
+
+
+export async function oneClickOauthLogin(provider: "github" | "google") {
+  try {
+    const authData = await pb.collection('sherpa_user').authWithOAuth2({ provider});
+    // console.log("============== AUTH DATA ============== ",authData)
+    const dev = authData.record;
+    const data: SherpaUserUpdate = authData?.meta?.isNew?{
+      github_access_token: authData.meta?.accessToken,
+      github_username: authData.meta?.rawUser?.login,
+      // username: authData.meta?.rawUser?.login,
+      avatar_url: authData.meta?.rawUser?.avatar_url,
+      about_me: authData.meta?.rawUser?.bio,
+    }:
+    {
+        github_access_token: authData.meta?.accessToken,
+    };
+    console.log("to update  === ",data)
+    const updated_user =await pb.collection("sherpa_user").update(dev.id, data)
+    document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
+    return updated_user
+
+  } catch (error) {
+    throw error
+  }
+}
+
+
+
 
 
 export function getFileURL({collection_id_or_name,file_name,record_id}:{

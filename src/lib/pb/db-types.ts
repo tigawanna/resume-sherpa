@@ -33,6 +33,7 @@ type MaybeArray<T> = T | T[];
 
 export type SherpaUserResponse = {
     about_me?: string;
+    github_access_token?: string;
     github_username?: string;
     linkedin_username?: string;
     country?: string;
@@ -49,6 +50,7 @@ export type SherpaUserResponse = {
 export type SherpaUserCreate = {
     about_me?: string;
     github_username?: string;
+    github_access_token?: string;
     linkedin_username?: string;
     country?: string;
     city?: string;
@@ -64,6 +66,7 @@ export type SherpaUserCreate = {
 export type SherpaUserUpdate = {
     about_me?: string;
     github_username?: string;
+    github_access_token?: string;
     linkedin_username?: string;
     username?:string;
     country?: string;

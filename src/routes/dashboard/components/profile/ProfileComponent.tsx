@@ -102,6 +102,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
           <div className="w-full flex flex-col md:flex-row gap-5  justify-between ">
             <div className="min-w-[250px] w-full">
               <ProfileImage
+                avatar_url={response?.data?.avatar_url}
                 file_name={response?.data?.avatar}
                 record_id={response?.data?.id}
                 editing={editing}
