@@ -1,6 +1,6 @@
 import { Toolbar } from "@/components/navigation/Toolbar";
 import { Nprogress } from "@/components/navigation/nprogress/Nprogress";
-import { ClientSuspense, LayoutProps, PageContext, useLocation } from "rakkasjs";
+import { ClientSuspense, Head, LayoutProps, PageContext, useLocation } from "rakkasjs";
 import { ToastContainer } from "react-toastify";
 import "./index.css";
 import "cherry-markdown/dist/cherry-markdown.css";
@@ -39,8 +39,11 @@ function Layout({ children }: LayoutProps) {
 Layout.preload = (ctx: PageContext) => {
   return {
     head: {
-      title: "Sherpa Rakkas",
-      description: "Resume building assistant",
+      title: "Sherpa",
+      keywords:
+        "job-specific resume, cover letter, AI-powered, resume builder, cover letter builder, resume feedback, cover letter feedback",
+      description:
+        " Sherpa is the AI-powered platform that helps you build job-specific resumes and cover letters that will get you noticed. With Sherpa, you can quickly and easily create a resume and cover letter tailored to each job you apply for, highlight your most relevant skills and experience, and get feedback from experts to make sure your resume and cover letter are polished and professional",
     },
   };
 };

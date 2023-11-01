@@ -10,8 +10,10 @@ export function IntroSection({}: IntroSectionProps) {
         <div className="flex min-h-[450px] flex-col justify-center sm:p-6 text-center rounded-sm lg:max-w-md xl:max-w-lg lg:text-left">
           <h1 className="text-8xl font-bold sm:text-8xl">Sherpa</h1>
           <p className="mt-6 mb-8  font-normal sm:text-lg sm:mb-12">
-            Scaffold out a job specific resume and cover letter, Easily create
-            tailored resumes and cover letters for every job application
+            Sherpa is the AI-powered platform that helps you build job-specific
+            resumes and cover letters that will get you noticed.
+            <br />
+            
           </p>
           <div className="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
             <Link href="/dashboard" className="btn btn-primary">
