@@ -9,6 +9,10 @@ export async function canProompt(
   can_proompt_after: number;
 }> {
   try {
+    // return {
+    //   can_proompt: true,
+    //   can_proompt_after: 0,
+    // };
     const user = ctx.locals.pb?.authStore.model as SherpaUserResponse;
     if (type === "letter") {
      
@@ -20,6 +24,7 @@ export async function canProompt(
             await ctx.locals.pb?.collection("sherpa_user").update(user.id, {
               last_letter_on: new Date(),
             });
+            // console.log(" ================ updated last letter on =============",updated_user)
             return {
               can_proompt: true,
               can_proompt_after: 0,
@@ -44,13 +49,14 @@ export async function canProompt(
         ? new Date(user.last_resume_on)
         : new Date();
         const last_resume_on_hour = user.last_resume_on?last_resume_on.getHours():3
-        console.log({last_resume_on_hour})
+      
         const this_hour = new Date().getHours();
         if (last_resume_on_hour <= this_hour - 3) {
         try {
           await ctx.locals.pb?.collection("sherpa_user").update(user.id, {
             last_resume_on: new Date(),
           });
+          console.log(" ================ updated last resume on =============")
           return {
             can_proompt: true,
             can_proompt_after: 0,

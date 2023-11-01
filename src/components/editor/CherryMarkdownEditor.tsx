@@ -48,15 +48,15 @@ export default function CherryMarkdownEditor({
   }
 
   
-
+      
   return (
     <div className="w-full h-full flex flex-col items-center justify-between gap-2 ">
-      <div className="w-full flex gap-1 items-center justify-end sticky top-10 z-50">
-        {custom_element&&custom_element(cherry?.current)}
+      <div className="w-full flex gap-3 items-center justify-end sticky top-10 z-50">
+        {custom_element && custom_element(cherry?.current)}
         <button
-          className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-          about={'print content'}
-          data-tip={'print content'}
+          className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal rounded-full hover:text-accent "
+          about={"print content"}
+          data-tip={"print content"}
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -66,9 +66,9 @@ export default function CherryMarkdownEditor({
           <Printer className="w-5 h-5" />
         </button>
         <button
-          className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-          about={'copy to clipboard'}
-          data-tip={'copy to clipboard'}
+          className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal rounded-full hover:text-accent"
+          about={"copy to clipboard"}
+          data-tip={"copy to clipboard"}
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -82,39 +82,39 @@ export default function CherryMarkdownEditor({
         </button>
 
         <button
-          className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
+          className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal rounded-full hover:text-accent"
           type="button"
-          about={'editor,preview split-view'}
-          data-tip={'editor,preview split-view'}
+          about={"editor,preview split-view"}
+          data-tip={"editor,preview split-view"}
           onClick={(e) => {
             e.stopPropagation();
-            cherry.current?.switchModel('edit&preview');
+            cherry.current?.switchModel("edit&preview");
           }}
         >
           <SplitSquareHorizontal className="h-5 w-5" />
         </button>
 
         <button
-          className="btn btn-outline btn-sm text-xs font-normal hover:text-accent"
+          className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal hover:text-accent"
           type="button"
           data-tip="editor only view"
           about="editor only view"
           onClick={(e) => {
             e.stopPropagation();
-            cherry.current?.switchModel('editOnly');
+            cherry.current?.switchModel("editOnly");
           }}
         >
           <FileEdit className="h-5 w-5" />
         </button>
 
         <button
-          className="btn btn-outline btn-sm text-xs font-normal hover:text-accent"
+          className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal hover:text-accent"
           type="button"
           about="preview only view"
           data-tip="preview only view"
           onClick={(e) => {
             e.stopPropagation();
-            cherry.current?.switchModel('previewOnly');
+            cherry.current?.switchModel("previewOnly");
           }}
         >
           <GalleryThumbnails className="h-5 w-5" />

@@ -1,12 +1,10 @@
-import { Spinner } from "@/components/navigation/loaders/Spinner";
 import { SherpaJobApplicationResponse, SherpaJobApplicationUpdate } from "@/lib/pb/db-types";
 import { ApiRouteResponse } from "@/lib/rakkas/utils/types";
 import { apiRouteTryCatchWrapper, tryCatchWrapper, useMutationFetcher } from "@/utils/async";
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { useMutation } from "@tanstack/react-query";
 import Cherry from "cherry-markdown";
-import { Save } from "lucide-react";
-import {  usePageContext } from "rakkasjs";
+import { Loader, Save, Sparkles } from "lucide-react";
 import { toast } from "react-toastify";
 
 
@@ -66,15 +64,14 @@ const user = user_query?.data;
     cherry && setCoverLetter(markdown);
     update_job_application_mutation
       .mutateAsync({
-
-        id: application_input?.id ?? '',
+       id: application_input?.id ?? '',
         data:{
           cover_letter: markdown,
           user:user?.id!,
-
         }
       })
       .then((res) => {
+        
         if (res.error) {
           toast(`Adding cover letter to Job application failed`, {
             type: 'error',
@@ -93,6 +90,9 @@ const user = user_query?.data;
   function aiGenerateCoverLetter() {
     const resume = cherry?.getMarkdown();
     if (!resume) {
+      toast(`Resume required`, {
+        type: 'error',
+      })
       return;
     }
     const input = {
@@ -104,14 +104,15 @@ const user = user_query?.data;
     ai_letter_mutation
       .mutateAsync(input)
       .then((res) => {
-        //    if mutaio errored
-        if (res.error) {
-          toast(`Generating cover letter  failed : ${res.error.message}`, {
+        //    if mutation errored
+      // console.log(" ============ cover letter AI respoense  ============= ",res)
+      if (res.data?.error) {
+          toast(`Generating cover letter  failed : ${res.data?.error.message}`, {
             type: 'error',
           });
           return;
         }
-        if(res.data){
+        if(res.data?.data){
           // succefull response
           cherry?.setMarkdown(res?.data?.data?.output??"");
           toast(`AI Cover letter generated`, {
@@ -128,9 +129,10 @@ const user = user_query?.data;
   return (
     <div className="w-full flex gap-1">
       <button
-        className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-        about={'save content'}
-        data-tip={'save content'}
+        className="md:tooltip hover:md:tooltip-open md:tooltip-top text-xs font-normal rounded-full hover:text-accent"
+        about={"save content"}
+        data-tip={"save content"}
+        disabled={update_job_application_mutation.isPending}
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -138,23 +140,31 @@ const user = user_query?.data;
         }}
       >
         {update_job_application_mutation.isPending ? (
-          <Spinner size="30px" />
+          <Loader className="animate-spin h-4 w-4" />
         ) : (
           <Save className="w-5 h-5" />
         )}
       </button>
 
       <button
-        className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-        about={'save content'}
-        data-tip={'save content'}
+        className="md:tooltip hover:md:tooltip-open md:tooltip-top btn btn-sm
+         btn-outline font-normal rounded-full hover:text-accent"
+        about={"save content"}
+        data-tip={"save content"}
         type="button"
+        disabled={ai_letter_mutation.isPending}
         onClick={(e) => {
           e.stopPropagation();
-            aiGenerateCoverLetter();
+          aiGenerateCoverLetter();
         }}
       >
-        {ai_letter_mutation.isPending ? <Spinner size="40px" /> : 'AI generate'}
+        <div className="flex gap-2 items-center justify-center">
+          AI generate{" "}
+          <Sparkles />
+          {ai_letter_mutation.isPending && (
+            <Loader className="animate-spin h-4 w-4" />
+          )}
+        </div>
       </button>
     </div>
   );

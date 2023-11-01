@@ -52,6 +52,7 @@ export async function post(ctx:RequestContext){
             },{status:400});
         }
         const can_proompt = await canProompt(ctx,"letter")
+        
         if(!can_proompt.can_proompt){
             return json({
                 data:null,

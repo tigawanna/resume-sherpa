@@ -7,12 +7,12 @@ import { tryCatchWrapper } from "@/utils/async";
 export default function JobApplicationPage({params}:PageProps) {
   const page_ctx = usePageContext();
   const query = useQuery({
-    queryKey: ["sherpa_job_application", params.internship],
+    queryKey: ["sherpa_job_application", params.job],
     queryFn: () => {
       return tryCatchWrapper(
         page_ctx.locals.pb
           ?.collection("sherpa_job_application")
-          .getOne(params.internship),
+          .getOne(params.job),
       );
     },
   });

@@ -1,17 +1,26 @@
-import { Spinner } from '@/components/navigation/loaders/Spinner';
-import { SherpaJobApplicationResponse, SherpaJobApplicationUpdate, SherpaResumeCreate, SherpaResumeResponse, SherpaResumeUpdate } from '@/lib/pb/db-types';
-import { ApiRouteResponse } from '@/lib/rakkas/utils/types';
-import { apiRouteTryCatchWrapper, tryCatchWrapper, useMutationFetcher } from '@/utils/async';
-import { useUser } from '@/utils/hooks/tanstack-query/useUser';
-import { useMutation } from '@tanstack/react-query';
-import Cherry from 'cherry-markdown';
-import { Save } from 'lucide-react';
-import { toast } from 'react-toastify';
+import {
+  SherpaJobApplicationResponse,
+  SherpaJobApplicationUpdate,
+  SherpaResumeCreate,
+  SherpaResumeResponse,
+  SherpaResumeUpdate,
+} from "@/lib/pb/db-types";
+import { ApiRouteResponse } from "@/lib/rakkas/utils/types";
+import {
+  apiRouteTryCatchWrapper,
+  tryCatchWrapper,
+  useMutationFetcher,
+} from "@/utils/async";
+import { useUser } from "@/utils/hooks/tanstack-query/useUser";
+import { useMutation } from "@tanstack/react-query";
+import Cherry from "cherry-markdown";
+import { Loader, Save, Sparkles } from "lucide-react";
+import { toast } from "react-toastify";
 
 interface ResumeEditorControlsProps {
   cherry: Cherry | null;
   setResume: (resume: string) => void;
-  resume_input?: SherpaResumeResponse
+  resume_input?: SherpaResumeResponse;
   application_input: SherpaJobApplicationResponse;
   updating?: boolean;
 }
@@ -33,24 +42,38 @@ export function ResumeEditorControls({
   resume_input,
   updating,
 }: ResumeEditorControlsProps) {
-const {user_query,page_ctx} = useUser()
-  const user = user_query?.data
-const ai_resume_mutation = useMutation({
-  mutationFn: (vars: AiGeneratorInput) => {
-    return apiRouteTryCatchWrapper(useMutationFetcher<AiResumeResponse>(page_ctx, "/api/ai/resume", vars, "POST"))
-  },
-});
+  const { user_query, page_ctx } = useUser();
+  const user = user_query?.data;
+  const ai_resume_mutation = useMutation({
+    mutationFn: (vars: AiGeneratorInput) => {
+      return apiRouteTryCatchWrapper(
+        useMutationFetcher<AiResumeResponse>(
+          page_ctx,
+          "/api/ai/resume",
+          vars,
+          "POST",
+        ),
+      );
+    },
+  });
 
-
-  const create_mutation = useMutation({mutationFn:(vars:SherpaResumeCreate) => {
-    return tryCatchWrapper(page_ctx.locals.pb?.collection("sherpa_resume").create(vars));
-  }});
+  const create_mutation = useMutation({
+    mutationFn: (vars: SherpaResumeCreate) => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb?.collection("sherpa_resume").create(vars),
+      );
+    },
+  });
 
   const update_mutation = useMutation({
-    mutationFn:(vars:{id:string,data:SherpaResumeUpdate}) => {
-    return tryCatchWrapper(page_ctx.locals.pb?.collection("sherpa_resume").update(vars.id,vars.data));
-  }
-});
+    mutationFn: (vars: { id: string; data: SherpaResumeUpdate }) => {
+      return tryCatchWrapper(
+        page_ctx.locals.pb
+          ?.collection("sherpa_resume")
+          .update(vars.id, vars.data),
+      );
+    },
+  });
   const update_job_application_mutation = useMutation({
     mutationFn: (vars: { id: string; data: SherpaJobApplicationUpdate }) => {
       return tryCatchWrapper(
@@ -61,7 +84,6 @@ const ai_resume_mutation = useMutation({
     },
   });
 
-
   function aiGenerateresume() {
     const resume = cherry?.getMarkdown();
     if (!resume) {
@@ -69,31 +91,33 @@ const ai_resume_mutation = useMutation({
     }
     const input = {
       job: application_input.description,
-      resume
+      resume,
     };
     // console.log('input  ==== ', input);
     // return
     ai_resume_mutation
       .mutateAsync(input)
       .then((res) => {
-        if(res.data){
-        cherry?.setMarkdown(res.data?.data?.output??"");
-        toast(`AI Resume generated`, {
-          type: "success",
-        });
+        console.log("setMarkdown  ===== ", res);
+        if (res?.data?.data) {
+          cherry?.setMarkdown(res.data?.data?.output ?? "");
+          toast(`AI Resume generated`, {
+            type: "success",
+          });
         }
         //    if mutaio errored
-        if (res.error) {
-          toast(`Generating Resume  failed : ${res?.error?.message}`, {
-            type: 'error',
+        if (res.data?.error) {
+          toast(`Generating Resume  failed : ${res?.data?.error?.message}`, {
+            type: "error",
           });
           return;
         }
         // succefull response
-
       })
       .catch((error: any) => {
-        toast(`Generating Resume  failed : ${error.message}`, { type: 'error' });
+        toast(`Generating Resume  failed : ${error.message}`, {
+          type: "error",
+        });
       });
   }
 
@@ -104,30 +128,28 @@ const ai_resume_mutation = useMutation({
     if (updating) {
       update_mutation.mutateAsync({
         id: resume_input?.id!,
-        data:{
+        data: {
           body: markdown,
           user: user?.id!,
-          job_application:application_input.id!,
-          }
+          job_application: application_input.id!,
+        },
       });
     }
     create_mutation
       .mutateAsync({
-
-          body: markdown,
-          user: user?.id!,
-          job_application: application_input.id!,
-        
+        body: markdown,
+        user: user?.id!,
+        job_application: application_input.id!,
       })
       .then((res) => {
         if (res?.data) {
           if (res?.data.id) {
             update_job_application_mutation
-            .mutateAsync({
+              .mutateAsync({
                 id: application_input?.id ?? "",
-                data:{
-                  resume: res.data.body
-                }
+                data: {
+                  resume: res.data.body,
+                },
               })
               .then((res) => {
                 if (res.error) {
@@ -136,7 +158,7 @@ const ai_resume_mutation = useMutation({
                   });
                   return;
                 }
-                if(res.data){
+                if (res.data) {
                   toast(
                     `Resume added to Job application ${res?.data?.id} successfully`,
                     {
@@ -144,7 +166,6 @@ const ai_resume_mutation = useMutation({
                     },
                   );
                 }
-
               });
           }
         }
@@ -163,31 +184,40 @@ const ai_resume_mutation = useMutation({
     update_mutation.isPending;
   return (
     <div className="w-full flex gap-1">
-      
       <button
-        className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-        about={'save content'}
-        data-tip={'save content'}
+        className="md:tooltip hover:md:tooltip-open md:tooltip-top btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
+        about={"save content"}
+        data-tip={"save content"}
         type="button"
         onClick={(e) => {
           e.stopPropagation();
           saveResume();
         }}
       >
-        {is_saving ? <Spinner size="30px" /> : <Save className="w-5 h-5" />}
+        {is_saving ? (
+          <Loader className="w-4 h-4 animate-spin" />
+        ) : (
+          <Save className="w-5 h-5" />
+        )}
       </button>
 
       <button
-        className="btn btn-outline btn-sm text-xs font-normal rounded-full hover:text-accent"
-        about={'save content'}
-        data-tip={'save content'}
+        className="md:tooltip hover:md:tooltip-open md:tooltip-top btn btn-sm
+         btn-outline font-normal rounded-full hover:text-accent"
+        about={"save content"}
+        data-tip={"save content"}
         type="button"
         onClick={(e) => {
           e.stopPropagation();
           aiGenerateresume();
         }}
       >
-        {ai_resume_mutation.isPending ? <Spinner size="40px" /> : 'AI generate'}
+        <div className="flex gap-2 items-center justify-center">
+          AI generate <Sparkles />
+          {ai_resume_mutation.isPending && (
+            <Loader className="animate-spin h-4 w-4" />
+          )}
+        </div>
       </button>
     </div>
   );
