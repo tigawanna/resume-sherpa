@@ -184,7 +184,7 @@ export function MainJobApplicationForm({
         })}
       </div>
             {/* multiste progress indicator */}
-        <div className="absolute right-[4%] top-[4%]">
+        <div className="absolute right-[2%] top-[2%]">
           {currentStepIndex + 1} / {steps.length}
         </div>
                {/* current multi step component */}

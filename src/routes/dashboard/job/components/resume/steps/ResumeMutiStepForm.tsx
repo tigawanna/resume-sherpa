@@ -253,7 +253,7 @@ const { handleChange, input, setError, setInput, validateInputs } =
         onSubmit={onSubmit}
         className="card card-bordered w-full p-5  min-h-[70vh] flex flex-col items-stretch justify-between"
       >
-        <div className="absolute right-[4%] top-[4%]">
+        <div className="absolute right-[2%] top-[2%]">
           {currentStepIndex + 1} / {steps.length}
         </div>
         <h2 className="text-xl font-bold">{step?.title}</h2>
