@@ -41,6 +41,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
     about_me: profile?.about_me ?? "",
     // @ts-expect-error
     avatar: profile?.avatar,
+    email: profile?.email,
     country: profile?.country ?? "",
     city: profile?.city ?? "",
     langauges: profile?.langauges ?? "",
@@ -72,10 +73,15 @@ export function ProfileComponenst({}: ProfileComponentProps) {
   });
 
   const response = query.data;
+
   return (
     <div className="w-full h-full flex flex-col items-center  px-4 ">
       {response?.error && <PBReturnedUseQueryError error={response.error} />}
-
+      {!response?.data?.verified && (
+        <div className="text-sm bg-error/20 text-error sticky top-10 p-1">
+          ⚠ unverified emails have read-only access 
+        </div>
+      )}
       <div className="flex items-center justify-end gap-1  p-1 w-full sticky top-10">
         {editing && (
           <button title="save changes" className="btn btn-sm ">
@@ -100,7 +106,7 @@ export function ProfileComponenst({}: ProfileComponentProps) {
       {response?.data && (
         <div className="w-full  flex flex-col  gap-10  p-1  mb-5 sm:px-5 ">
           <div className="w-full flex flex-col md:flex-row gap-5  justify-between ">
-            <div className="min-w-[250px] w-full">
+            <div className="min-w-[250px] w-full md:w-[25%]">
               <ProfileImage
                 avatar_url={response?.data?.avatar_url}
                 file_name={response?.data?.avatar}
