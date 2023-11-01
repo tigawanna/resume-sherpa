@@ -1,3 +1,4 @@
+import { Button } from "@/components/shadcn/ui/button";
 import { Loader } from "lucide-react";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
@@ -14,15 +15,15 @@ interface SubmitButtonProps {
 
 export function SubmitButton({disabled,className,loading,action,label="Submit"}:SubmitButtonProps){
 return (
-  <button
+  <Button
     aria-disabled={disabled ?? loading}
     disabled={disabled ?? loading}
     className={twMerge(
-    loading?"btn btn-sm h-auto btn-outline btn-disabled brightness-90":"btn btn-sm h-auto btn-outline", className)}
+    loading?"btn btn-sm btn-outline btn-disabled brightness-90 m-2":"btn btn-sm btn-outline m-2", className)}
     onClick={()=>action&&action()}
   >
     {label}
   {loading&&<Loader className="animate-spin"/>}
-  </button>
+  </Button>
 );
 }
