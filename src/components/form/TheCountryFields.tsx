@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {  getCountries } from "./location/location";
 import { Country } from "./location/types";
 import { useHandRolledQuery } from "@/utils/hooks/useHandRolledQuery";
+import { LocateIcon, MapPin } from "lucide-react";
 
 interface TheCountryFieldsProps {
   setInput: (props: SetCountryInput) => void;
@@ -87,19 +88,20 @@ export function TheCountryFields({
   }
 
   return (
-    <div className="min-h-sm flex cursor-pointer flex-col lg:flex-rowitems-center  gap-2 ">
-      <div className="min-h-sm flex cursor-pointer flex-wrap items-center  gap-2 ">
+    <div className="min-h-sm flex cursor-pointer flex-col lg:flex-row items-center  gap-2 ">
+
+      <div className="w-full  flex  cursor-pointer flex-wrap items-center  gap-1 sm:pl-2">
         {editing && (
-          <div className="flex items-center justify-center">
+          <div className="flex ">
             <div className="flex flex-col gap-[1px]">
               <TheTextInput
                 field_key={"word"}
-                field_name={"country"}
+                field_name={<MapPin className="w-4 h-4"/>}
                 autoComplete="off"
                 val={keyword.word}
                 onChange={handleChange}
                 container_classname="flex-row items-center"
-                label_classname="hidden"
+                label_classname=""
                 placeholder={"search for country"}
               />
               {country.country === "" && (
@@ -121,13 +123,13 @@ export function TheCountryFields({
         ) : null}
         {/* {!editing&&<div className="flex ">{country.country}</div>} */}
 
-        <div className="h-full flex flex-wrap items-center justify-center rounded-lg duration-500 animate-in fade-in">
+        <div className=" flex flex-wrap items-center justify-center rounded-lg duration-500 animate-in fade-in">
           {data?.slice(0, 10).map((item, idx: number) => {
             return (
               <div
                 key={item.name.official + idx}
                 onClick={() => finishSearch(item)}
-                className="m-1 flex min-w-fit items-center justify-center rounded-lg border-2 px-2
+                className="flex min-w-fit items-center justify-center rounded-lg border-2 px-2
                 py-1 text-center duration-100 ease-in hover:bg-accent/30"
               >
                 <div> {item.name.common} </div>
