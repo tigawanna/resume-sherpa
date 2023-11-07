@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge";
 interface TheTextAreaProps<T>
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   field_key: keyof T;
-  field_name: string;
+  field_name: React.ReactNode;
   description_classname?: string;
   error_message?: string;
   container_classname?: string;

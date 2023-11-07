@@ -13,8 +13,7 @@ interface ExperienceProps {}
 export function Experience({}: ExperienceProps) {
   
   const page_ctx = usePageContext();
-  const { debouncedValue, isDebouncing, keyword, setKeyword } =
-    useSearchWithQuery();
+  const { debouncedValue, isDebouncing, keyword, setKeyword } =useSearchWithQuery();
   const page_number = parseInt(page_ctx.url.searchParams.get("p") ?? "1") ?? 1;
   const query = useQuery({
     queryKey: ["sherpa_experience", debouncedValue, page_number],

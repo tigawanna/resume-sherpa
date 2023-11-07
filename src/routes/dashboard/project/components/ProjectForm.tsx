@@ -13,6 +13,8 @@ import { tryCatchWrapper } from "@/utils/async";
 import { useUser } from "@/utils/hooks/tanstack-query/useUser";
 import { SubmitButton } from "@/components/form/inputs/SubmitButton";
 import { TheStringListInput } from "@/components/form/inputs/StringListInput";
+import { PbTheTextInput } from "@/lib/pb/components/form/PBTheTextInput";
+import { PbTheTextAreaInput } from "@/lib/pb/components/form/PBTheTextAreaInput";
 
 interface ProjectFormProps {
 project?:SherpaProjectsResponse|null
@@ -87,10 +89,12 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         .mutateAsync(input)
         .then((res) => {
           if(res.data){
+            // console.log("data",res.data)
             toast("Project added successfully", { type: "success" })
             navigate("/dashboard/project");
           }
           if(res.error){
+            console.log("error creating new project ==== ",res.error.data?.data?.description?.message)
             toast(res.error.message, { type: "error", autoClose: false })
           }
           })
@@ -115,17 +119,19 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
       >
         <FormHeader editing={editing} updating={updating} name="Project" />
 
-        <TheTextInput
+        <PbTheTextInput
           field_key={"name"}
           field_name={"Name"}
           val={input["name"]}
+          required
           onChange={handleChange}
           editing={editing}
         />
-        <TheTextAreaInput
+        <PbTheTextAreaInput
           field_name={"Description"}
           field_key="description"
           value={input["description"]}
+          required
           className="min-h-[100px]"
           onChange={handleChange}
           editing={editing}

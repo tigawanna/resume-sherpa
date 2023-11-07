@@ -1,9 +1,9 @@
-import { TheTextInput } from "@/components/form/inputs/TheTextInput";
+import { TheTextAreaInput } from "@/components/form/inputs/TheTextArea";
 import { IUseFormError } from "@/components/form/useForm";
 import { ClientResponseError } from "pocketbase";
 
-interface PbTheTextInputProps<T>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PbTheTextAreaInputProps<T>
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   field_name: React.ReactNode;
   field_key: keyof T;
   error_message?: string;
@@ -13,23 +13,22 @@ interface PbTheTextInputProps<T>
   output_classname?: string;
   editing?: boolean;
   description?: string;
-  val?: string | Date | URL | number | readonly string[] | undefined;
-  error?:IUseFormError|null
-  pb_error?:ClientResponseError|null
+  error?: IUseFormError | null;
+  pb_error?: ClientResponseError | null;
 }
 interface FieldError {
   message: string;
   code: string;
 }
 
-export function PbTheTextInput<T>({
+export function PbTheTextAreaInput<T>({
   field_name,
   field_key,
   editing = true,
   error,
   pb_error,
   ...props
-}: PbTheTextInputProps<T>) {
+}: PbTheTextAreaInputProps<T>) {
     const validatin_field_error = error?.name===field_key ? error.message : undefined
     const error_data = pb_error?.data?.data
     const pb_field_error = error_data?.[field_key] as FieldError | undefined;
@@ -40,12 +39,11 @@ export function PbTheTextInput<T>({
     // console.log(" field error ====== ",field_error)
   return (
     <div className="w-full flex flex-col gap-1">
-      <TheTextInput
+      <TheTextAreaInput
         {...props}
         field_key={field_key}
         field_name={field_name}
         editing={editing}
-        val={props.val ?? props.value}
         error_message={validatin_field_error??pb_field_error?.message}
       />
     </div>
